@@ -1,0 +1,7 @@
+requests
+bs4
+pandas
+termcolor
+spacy
+tensorflow
+tensorflow_hub
