@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 from termcolor import colored
 from pandas import DataFrame
 import pandas as pd
+from datetime import datetime
 
+from dfconvert import df_store
 
 def get(url):
 
@@ -56,13 +58,16 @@ def find_all_stories(soup):
     sub_stories = find_stories("a", cls_search_head, -1)
 
     stories = pd.merge(main_stories, sub_stories, on = ['header', 'header'], how='outer')
+    stories = stories.drop_duplicates()
+
     stories[['flag_x', 'flag_y']] = stories[['flag_x', 'flag_y']].fillna(0)
     stories['flag'] = stories['flag_x'] + stories['flag_y']
     stories = stories.drop(['flag_x', 'flag_y'], axis=1)
+    stories['flag'] = stories['flag'].astype(int)
+
     return stories
 
 
-       
 
 
 
@@ -71,4 +76,18 @@ if __name__ == "__main__":
     soup = get(url)
     all_stories = find_all_stories(soup)
     #print(all_stories.head())
+    current_date = datetime.now()
 
+    all_stories['url'] = url
+    all_stories['date'] = current_date
+
+
+    #df_store('all_stories_'+ str(current_date.strftime("%Y%m%d_%H%M%S")) + '.csv').store_df(all_stories)
+    filename = 'all_stories.h5'
+    try:
+        df_store(filename).store_df(all_stories)
+    except:
+        df_store(filename).append_df(all_stories)
+    df = df_store('all_stories.h5').load_df()
+    print(df)
+    print(len(df))
