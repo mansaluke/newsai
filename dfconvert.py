@@ -7,6 +7,10 @@ easily store and load their panda dataframes. current storage formats include: j
 """
 from datetime import datetime
 import pandas  as pd
+try:
+    import dask.dataframe as dd
+except ImportError:
+    pass
 from calendar import monthrange
 import sys, os
 import pandas as pd
@@ -22,47 +26,17 @@ except ImportError:
 
 
 
-    
-def try_import(module_names):
-
-    import importlib
-
-    failed_imports = []
-
-    def import_module_fn(mod_in):
-        try:
-            #import mod_in
-            mod_in = importlib.import_module(mod_in)
-        except ImportError:
-            failed_imports.append(mod_in)
-
-    if isinstance(module_names, list):
-        for mod in module_names:
-            import_module_fn(mod)
-    else:
-        import_module_fn(module_names)
-
-    if failed_imports ==[]:
-        pass
-    else:
-        print('Unable to import ' + ', '.join(failed_imports))
-
-
-#try_import(['feather', 'pyarrow.parquet'])
-
-#import feather
-#import pyarrow.parquet
-
-storagetypes = ["pickle", "json", "csv", "parquet", "feather", "h5"]
-storagetypes_dict = {"pickle": "", "json": "json", "csv": "csv", "parquet": "parquet", "feather": "feather", "HDF5": "h5" }
-
-
-
 if Ipython.run_from_ipython()==True:
     print('Ipython active')
     standardpath='fanalysis\data'
 else:
     standardpath = 'data'
+
+
+storagetypes = ["pickle", "json", "csv", "parquet", "feather", "h5"]
+storagetypes_dict = {"pickle": "", "json": "json", "csv": "csv", "parquet": "parquet", "feather": "feather", "HDF5": "h5" }
+
+
 
 class df_store:
     """
@@ -181,8 +155,17 @@ class df_store:
         df = pd.read_json(jfile, orient='records') #, convert_dates=['date'])
         return df
 
-    def csv_load(self, csvfile):    
-        df = pd.read_csv(csvfile) 
+    def csv_load(self, csvfile):   
+        ##dd = dask version of dataframe
+        try: 
+            df = dd.read_csv(csvfile, encoding = "utf-8")
+        except:
+            try:
+                df = pd.read_csv(csvfile, encoding = "utf-8") 
+            except UnicodeDecodeError:
+                df = pd.read_csv(csvfile, encoding = "ISO-8859-1")
+            except UnicodeDecodeError:
+                df = pd.read_csv(csvfile, encoding = "cp1252")
         return df
     
     def h5_load(self, hdffile):
@@ -229,7 +212,7 @@ class df_store:
             pickle.dump(dataframe,fObject, pickle.HIGHEST_PROTOCOL)   
 
     def json_dfappend(self, dataframe, filename):
-        raise TypeError("Cannot append to json")
+        raise TypeError("Cannot append to json. Please use a different file type")
 
     def csv_dfappend(self, dataframe, filename):
         #sep='\t'
@@ -275,23 +258,6 @@ def create_path(path):
     else:
         pass
     return path
-
-
-
-def str_listconcat (input, str):
-    l = len(input)
-    list = []
-    for i in range(l):
-        list.append(str)
-        list[i] = list[i] + input[i]
-    input = list
-    return input
-
-
-def get_path():
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    print(dir_path)
-    return dir_path
 
 
 

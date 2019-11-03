@@ -6,3 +6,4 @@ spacy
 tensorflow
 tensorflow_hub
 tables
+dask

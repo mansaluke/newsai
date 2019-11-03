@@ -72,10 +72,19 @@ def find_all_stories(soup):
 
 
 if __name__ == "__main__":
+
     url = 'https://www.bbc.com/news'
+    filename = 'all_stories.h5'
+
+    try:
+        df = df_store(filename).load_df()
+        len_df0 = len(df)
+    except:
+        raise IOError('could not load file')
+    
     soup = get(url)
     all_stories = find_all_stories(soup)
-    #print(all_stories.head())
+
     current_date = datetime.now()
 
     all_stories['url'] = url
@@ -83,11 +92,17 @@ if __name__ == "__main__":
 
 
     #df_store('all_stories_'+ str(current_date.strftime("%Y%m%d_%H%M%S")) + '.csv').store_df(all_stories)
-    filename = 'all_stories.h5'
+    
     try:
         df_store(filename).store_df(all_stories)
     except:
         df_store(filename).append_df(all_stories)
-    df = df_store('all_stories.h5').load_df()
+    df = df_store(filename).load_df()
+    len_df1 = len(df)
     print(df)
     print(len(df))
+
+    try:
+        print('{} lines added'.format(len_df1 - len_df0))
+    except:
+        pass

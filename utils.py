@@ -79,7 +79,10 @@ def df_describe(df, col_details = True, columns = None):
                 print('Number of nulls: ', df[col].isnull().sum())
 
 
-
+def get_path():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    print(dir_path)
+    return dir_path
 
 
 #######################################
