@@ -11,7 +11,6 @@ from os.path import dirname, join, exists, isdir
 import json
 import pickle
 
-
 def run_from_ipython():
     try:
         __IPYTHON__

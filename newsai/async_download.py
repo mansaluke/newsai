@@ -1,15 +1,14 @@
 import sys
 import os
+import time
 from json import load, loads
 import asyncio
 import aiofiles
-# import aiohttp
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 import pandas as pd
 from datetime import datetime
-import time
 from dfconvert import df_store
 
 assert sys.version_info >= (3, 7), "Script requires Python 3.7+."
@@ -17,12 +16,15 @@ assert sys.version_info >= (3, 7), "Script requires Python 3.7+."
 
 class News():
 
-    def __init__(self, j_name='uri_config.json', **kwargs):
+    def __init__(self,
+                 j_name='uri_config.json',
+                 **kwargs):
+
         self.find_futures_list = []
         self.responses = {}
         self.j_dict = self.filter_by_val(
-                self.load_json(j_name), **kwargs
-                    )
+            self.load_json(j_name), **kwargs
+        )
 
     def __call__(self):
         self.add_futures(
@@ -86,7 +88,6 @@ class News():
                     uri_info["json_key"])
                 )
             )
-            # print(f'key error for {uri_info["uri"]}')
 
     def run_async(self):
         loop = asyncio.get_event_loop()
@@ -107,7 +108,12 @@ class News():
             )
         return None
 
-    async def exec_find(self, uri, alias, name, cls_name, features):
+    async def exec_find(self,
+                        uri,
+                        alias,
+                        name,
+                        cls_name,
+                        features):
         await self.responses[uri]
         stories_out = await self.find_stories(
             uri,
@@ -122,7 +128,12 @@ class News():
     async def json_selector(self, uri, alias, json_key):
         await self.responses[uri]
         json_out = loads(self.responses[uri])
-        results = json_out[json_key['filter']]
+
+        if type(json_key['filter']) is str:
+            json_key['filter'] = [json_key['filter']]
+        results = json_out
+        for fltr in json_key['filter']:
+            results = results[fltr]
 
         _stories = []
         for story in results:
@@ -142,7 +153,12 @@ class News():
             return await response.text()
 
     @staticmethod
-    async def find_stories(uri, alias, response_text, name, cls_name, features=None):
+    async def find_stories(uri,
+                           alias,
+                           response_text,
+                           name,
+                           cls_name,
+                           features=None):
         """
         for websites w/o apis
         """
@@ -177,9 +193,26 @@ class News():
         return _stories
 
 
+class Historicals(News):
+    def __init__(self,
+                 year,
+                 month,
+                 j_name='uri_hist_config.json',
+                 **kwargs):
+        super().__init__(j_name=j_name, **kwargs)
+        for element in self.j_dict.values():
+            element["uri"] = element["uri"].format(year, month)
+
+    def __call__(self):
+        self.add_futures(
+            self.j_dict
+        )
+        return self.run_async()
+
+
 if __name__ == "__main__":
-    # initiating
-    m = News()
+
+    m = News()  # Historicals(year=1990, month=4)
     out = m()
     df = pd.DataFrame()
 
