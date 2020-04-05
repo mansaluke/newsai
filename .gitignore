@@ -2,3 +2,6 @@ env/
 .vscode/
 __pycache__/
 newsai/async_download_dev.py
+newsai/test_hist_spark.ipynb
+newsai/uris_test.json
+newsai/urls.txt
