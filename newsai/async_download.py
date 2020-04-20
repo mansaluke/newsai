@@ -1,6 +1,10 @@
+__all__ = ["News", "HistoricalNews"]
+
 import sys
-import os
+from os.path import dirname, join, realpath
 import time
+import typing
+import pathlib
 from json import load, loads
 import asyncio
 import aiofiles
@@ -9,16 +13,20 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 import pandas as pd
 from datetime import datetime
-from dfconvert import df_store
+from dfconvert import Dstore, run_from_ipython
 
-assert sys.version_info >= (3, 7), "Script requires Python 3.7+."
+assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
+assert not run_from_ipython(), "Ipython not yet supported."
+
+Url = str
+Path = typing.Union[str, pathlib.Path]
 
 
 class News():
 
     def __init__(self,
-                 j_name='uri_config.json',
-                 **kwargs):
+                 j_name: Path = 'url_config.json',
+                 **kwargs: str):
 
         self.find_futures_list = []
         self.responses = {}
@@ -33,7 +41,7 @@ class News():
         return self.run_async()
 
     @staticmethod
-    def filter_by_val(j_dict, **kwargs):
+    def filter_by_val(j_dict: dict, **kwargs: str) -> dict:
         """
         we can pass in a list of arguments allowing
         us to filter the json by any values we like
@@ -48,48 +56,47 @@ class News():
         return j_dict
 
     @staticmethod
-    def load_json(j_name) -> dict:
-        json_path = os.path.join(
-            os.getcwd(), 'newsai', j_name
+    def load_json(j_name: dict) -> dict:
+        json_path = join(
+            dirname(realpath(__file__)), j_name
         )
         with open(json_path) as f:
             return load(f)
 
-    def add_futures(self, j_file):
-
+    def add_futures(self, j_file: Path):
         for v in j_file.values():
-            self.build_futures_get(v['uri'])
+            self.build_futures_get(v['url'])
             self.build_futures_search(v)
 
-    def build_futures_get(self, uri):
-        if uri not in self.responses:
-            self.responses[uri] = asyncio.ensure_future(
+    def build_futures_get(self, url: Url):
+        if url not in self.responses:
+            self.responses[url] = asyncio.ensure_future(
                 self.exec_get(
-                    uri=uri)
+                    url=url)
             )
 
-    def build_futures_search(self, uri_info: dict):
+    def build_futures_search(self, url_info: dict):
         try:
             self.find_futures_list.append(
                 asyncio.ensure_future(self.exec_find(
-                    uri_info["uri"],
-                    uri_info["alias"],
-                    uri_info["name"],
-                    uri_info["cls_name"],
-                    uri_info["features"]
+                    url_info["url"],
+                    url_info["alias"],
+                    url_info["name"],
+                    url_info["cls_name"],
+                    url_info["features"]
                 )
                 )
             )
         except KeyError:
             self.find_futures_list.append(
                 asyncio.ensure_future(self.json_selector(
-                    uri_info["uri"],
-                    uri_info["alias"],
-                    uri_info["json_key"])
+                    url_info["url"],
+                    url_info["alias"],
+                    url_info["json_key"])
                 )
             )
 
-    def run_async(self):
+    def run_async(self) -> list:
         loop = asyncio.get_event_loop()
         get_url_futures = asyncio.gather(
             *[f for f in self.responses.values()])
@@ -100,34 +107,31 @@ class News():
             asyncio.gather(get_url_futures, find_text_futures)
         )[1]
 
-    async def exec_get(self, uri):
-        print(f'getting {uri}')
+    async def exec_get(self, url: Url):
+        print(f'getting {url}')
         async with ClientSession() as session:
-            self.responses[uri] = await self.fetch_stories(
-                session, uri
+            self.responses[url] = await self.fetch_stories(
+                session, url
             )
-        return None
 
-    async def exec_find(self,
-                        uri,
-                        alias,
-                        name,
-                        cls_name,
-                        features):
-        await self.responses[uri]
+    async def exec_find(self, url: Url, alias: str,
+                        name: str, cls_name: str,
+                        features: str) -> list:
+        await self.responses[url]
         stories_out = await self.find_stories(
-            uri,
+            url,
             alias,
-            self.responses[uri],
+            self.responses[url],
             name,
             cls_name,
             features
         )
         return stories_out
 
-    async def json_selector(self, uri, alias, json_key):
-        await self.responses[uri]
-        json_out = loads(self.responses[uri])
+    async def json_selector(self, url: Url, alias: str,
+                            json_key: dict) -> list:
+        await self.responses[url]
+        json_out = loads(self.responses[url])
 
         if type(json_key['filter']) is str:
             json_key['filter'] = [json_key['filter']]
@@ -141,28 +145,26 @@ class News():
             for k, v in json_key['attribute'].items():
                 main_stories_dict.update({k: story[v]})
             main_stories_dict.update({
-                'uri': uri,
-                'date': datetime.now()
+                'alias': alias,
+                'url': url
             })
             _stories.append(main_stories_dict)
         return _stories
 
-    async def fetch_stories(self, session, url):
+    async def fetch_stories(self, session: ClientSession,
+                            url: Url):
         async with session.get(url) as response:
             print("Status: ", response.status)
             return await response.text()
 
     @staticmethod
-    async def find_stories(uri,
-                           alias,
-                           response_text,
-                           name,
-                           cls_name,
-                           features=None):
+    async def find_stories(url: Url, alias: str,
+                           response_text: str, name: str, cls_name: str, features: str
+                           ) -> list:
         """
         for websites w/o apis
         """
-        print(f'searching uri: {uri}')
+        print(f"searching url: {url}")
         soup = BeautifulSoup(response_text, features=features)
         _stories = []
 
@@ -182,28 +184,28 @@ class News():
                     'H1': _return_sibling(i),
                     'H2': _return_sibling(i.nextSibling),
                     'alias': alias,
-                    'uri': uri,
+                    'url': url,
                     'date': datetime.now()
                 }
 
                 if len(main_stories_dict) > 0:
                     _stories.append(main_stories_dict)
                 else:
-                    print(f'warning: dict empty for uri: {uri}')
+                    print(f'warning: dict empty for url: {url}')
         return _stories
 
 
-class Historicals(News):
+class HistoricalNews(News):
     def __init__(self,
-                 year,
-                 month,
-                 j_name='uri_hist_config.json',
-                 **kwargs):
+                 year:  int,
+                 month: int,
+                 j_name: Path = 'url_hist_config.json',
+                 **kwargs: str):
         super().__init__(j_name=j_name, **kwargs)
         for element in self.j_dict.values():
-            element["uri"] = element["uri"].format(year, month)
+            element["url"] = element["url"].format(year, month)
 
-    def __call__(self):
+    def __call__(self) -> list:
         self.add_futures(
             self.j_dict
         )
@@ -226,9 +228,9 @@ if __name__ == "__main__":
             print(e)
 
     print(df)
-    file_name = 'all_stories_async.csv'
+    file_name = 'all_stories.csv'
 
     try:
-        df_store(file_name).store_df(df)
+        Dstore(file_name).store_df(df)
     except FileExistsError:
-        df_store(file_name).append_df(df)
+        Dstore(file_name).append_df(df)

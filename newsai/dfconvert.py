@@ -1,17 +1,19 @@
+__all__ = ["run_from_ipython", "Dstore", "mkdir_p", "create_path"]
+
+import sys
+from os import getcwd, makedirs
+from os.path import dirname, join, exists, isdir
+import json
+import pickle
 from datetime import datetime
 import pandas as pd
 try:
     import dask.dataframe as dd
 except ImportError:
     pass
-from calendar import monthrange
-import sys
-from os import getcwd, makedirs
-from os.path import dirname, join, exists, isdir
-import json
-import pickle
 
-def run_from_ipython():
+
+def run_from_ipython() -> bool:
     try:
         __IPYTHON__
         return True
@@ -31,14 +33,14 @@ storagetypes_dict = {"pickle": "", "json": "json", "csv": "csv",
                      "parquet": "parquet", "feather": "feather", "HDF5": "h5"}
 
 
-class df_store:
+class Dstore(object):
     """
     loads/stores specified files to and from pickle, json, csv or parquet formats 
-    e.g.1 df_store('test.json').load_df()
-    e.g.2 df_store('test.json').store_df(df)
+    e.g.1 Dstore('test.json').load_df()
+    e.g.2 Dstore('test.json').store_df(df)
     *args = path parts. if no path entered the default path is used
     parquet format: "test.parquet.gzip" 
-    to store and load in current directory simply: df_store('test.csv', 'fanalysis').load_df()
+    to store and load in current directory simply: Dstore('test.csv', 'fanalysis').load_df()
     """
 
     def __init__(self, filename, *args):
@@ -134,25 +136,27 @@ class df_store:
         df = pd.read_json(jfile, orient=orient)
         return df
 
-    def csv_load(self, csvfile):
-        # dd = dask version of dataframe
-        try:
-            df = dd.read_csv(csvfile, encoding="utf-8")
-        except UnicodeDecodeError:
-            try:
-                df = pd.read_csv(csvfile, encoding="ISO-8859-1")
-            except UnicodeDecodeError:
-                df = pd.read_csv(csvfile, encoding="cp1252")
-        return df
+    def csv_load(self, csvfile, encoding=None):
+        encoding_types = ["utf-8", "ISO-8859-1", "cp1252"]
+
+        def _load(csvfile):
+            for e in encoding_types:
+                try:
+                    df = pd.read_csv(csvfile, encoding=e)
+                    break
+                except UnicodeError:
+                    pass
+            return df
+        if encoding is not None:
+            return pd.read_csv(csvfile, encoding=encoding)
+        else:
+            return _load(csvfile)
 
     def h5_load(self, hdffile):
         try:
             df = pd.read_hdf(hdffile, 'df')
         except Exception as e:
-            print('Could not load data using pandas read_hdf. Trying h5py...')
-            import h5py
-            df = h5py.File(hdffile, 'r')
-            print("file loaded as {}".format(type(df)))
+            print(f'Could not load data using pandas read_hdf. Error {e}')
         return df
 
     ###########################################################
