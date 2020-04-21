@@ -7,12 +7,11 @@ import typing
 import pathlib
 from json import load, loads
 import asyncio
-import aiofiles
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-import pandas as pd
 from datetime import datetime
+import pandas as pd
 from newsai.dfconvert import Dstore, run_from_ipython
 
 assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."

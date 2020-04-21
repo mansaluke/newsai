@@ -1,0 +1,50 @@
+{
+    "1": {
+        "url": "https://www.bbc.com/news",
+        "alias": "bbcnews",
+        "name": "p",
+        "cls_name": "gs-c-promo-summary gel-long-primer gs-u-mt nw-c-promo-summary",
+        "features": "lxml"
+    },
+    "2": {
+        "url": "https://www.bbc.com/news",
+        "alias": "bbcnews",
+        "name": "a",
+        "cls_name": "gs-c-promo-heading gs-o-faux-block-link__overlay-link gel-pica-bold nw-o-link-split__anchor",
+        "features": "lxml"
+    },
+    "3": {
+        "url": "https://www.foxnews.com/",
+        "alias": "foxnews",
+        "name": "",
+        "cls_name": [
+            "content",
+            "related-item related-item-color-default"
+        ],
+        "features": "lxml"
+    },
+    "4": {
+        "url": "https://abcnews.go.com/",
+        "alias": "abcnews",
+        "name": "",
+        "cls_name": [
+            "caption-wrapper",
+            "headlines-li story",
+            "headlines-li wirestory",
+            "headlines-ul",
+            "headlines-li video tr-video"
+        ],
+        "features": "lxml"
+    },
+    "5": {
+        "url": "https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv",
+        "alias": "nytimes",
+        "json_key": {
+            "filter": "results",
+            "attribute": {
+                "H0": "title",
+                "H1": "abstract"
+            }
+        }
+    }
+}
