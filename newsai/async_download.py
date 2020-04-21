@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 import pandas as pd
 from datetime import datetime
-from dfconvert import Dstore, run_from_ipython
+from newsai.dfconvert import Dstore, run_from_ipython
 
 assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
 assert not run_from_ipython(), "Ipython not yet supported."
@@ -210,27 +210,3 @@ class HistoricalNews(News):
             self.j_dict
         )
         return self.run_async()
-
-
-if __name__ == "__main__":
-
-    m = News()  # Historicals(year=1990, month=4)
-    out = m()
-    df = pd.DataFrame()
-
-    for i in out:
-        df = df.append(pd.DataFrame(i))
-
-    for col in ['H0', 'H1', 'H2']:
-        try:
-            df[col] = df[col].str.replace('\n+', '. ')
-        except Exception as e:
-            print(e)
-
-    print(df)
-    file_name = 'all_stories.csv'
-
-    try:
-        Dstore(file_name).store_df(df)
-    except FileExistsError:
-        Dstore(file_name).append_df(df)
