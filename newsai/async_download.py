@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 from datetime import datetime
 import pandas as pd
-from newsai.dfconvert import Dstore, run_from_ipython
+from .dfconvert import Dstore, run_from_ipython
 
 assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
 assert not run_from_ipython(), "Ipython not yet supported."
