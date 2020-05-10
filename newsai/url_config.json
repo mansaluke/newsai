@@ -43,7 +43,8 @@
             "filter": "results",
             "attribute": {
                 "H0": "title",
-                "H1": "abstract"
+                "H1": "abstract",
+                "date": "published_date"
             }
         }
     }

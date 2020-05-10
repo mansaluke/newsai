@@ -20,7 +20,7 @@ if __name__ == "__main__":
             for i in out:
                 df = df.append(pd.DataFrame(i))
                 print(df)
-            for col in ['H0', 'H1', 'H2']:
+            for col in ['H1', 'H2']:
                 try:
                     df[col] = df[col].str.replace('\n+', '. ')
                 except Exception as e:

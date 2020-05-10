@@ -11,14 +11,7 @@ try:
     import dask.dataframe as dd
 except ImportError:
     pass
-
-
-def run_from_ipython() -> bool:
-    try:
-        __IPYTHON__
-        return True
-    except NameError:
-        return False
+from .utils import run_from_ipython
 
 
 if run_from_ipython() is True:
@@ -53,12 +46,12 @@ class Dstore(object):
         except IndexError:
             self.filetype = "pickle"
 
-    def load_df(self):
+    def load_df(self, **kwargs):
         filename = self.filename
         filetype = self.filetype
         print(filename)
         if filetype in storagetypes:
-            fn = "self." + filetype + "_load(filename)"
+            fn = "self." + filetype + "_load(filename, **kwargs)"
             print("Loading " + filetype + ": " + filename)
 
             if not exists(filename):
@@ -74,7 +67,7 @@ class Dstore(object):
             raise ValueError(
                 "Cannot load that file type. Please check file name and try again.")
 
-    def store_df(self, dataframe):
+    def store_df(self, dataframe, **kwargs):
         """
         when replace_existing set to true any existing files with the same name will be automatically replaced
         """
@@ -82,7 +75,7 @@ class Dstore(object):
         filetype = self.filetype
 
         if filetype in storagetypes:
-            fn = "self.dfto" + filetype + "(dataframe, filename)"
+            fn = "self.dfto" + filetype + "(dataframe, filename, **kwargs)"
             print("Storing " + filetype + ": " + filename)
 
             if exists(filename):
@@ -98,7 +91,7 @@ class Dstore(object):
             raise ValueError(
                 "Cannot store that file type. Please check file name and try again.")
 
-    def append_df(self, dataframe, replace_existing=True):
+    def append_df(self, dataframe, replace_existing=True, **kwargs):
         """
         when replace_existing set to true any existing files with the same name will be automatically replaced
         """
@@ -111,7 +104,7 @@ class Dstore(object):
             if not exists(filename):
                 raise FileNotFoundError
 
-            fn = "self." + filetype + "_dfappend(dataframe, filename)"
+            fn = "self." + filetype + "_dfappend(dataframe, filename, **kwargs)"
             print("Appending " + filetype + ": " + filename)
 
             exec(fn)
@@ -183,7 +176,7 @@ class Dstore(object):
     ###########################################################
 
     def pickle_dfappend(self, dataframe, filename):
-        with open(filename, 'a+') as fObject:
+        with open(filename, 'ab') as fObject:
             pickle.dump(dataframe, fObject, pickle.HIGHEST_PROTOCOL)
 
     def json_dfappend(self, dataframe, filename):

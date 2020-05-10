@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 from datetime import datetime
 import pandas as pd
-from .dfconvert import Dstore, run_from_ipython
+from .utils import run_from_ipython
 
 assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
 assert not run_from_ipython(), "Ipython not yet supported."
@@ -158,13 +158,14 @@ class News():
 
     @staticmethod
     async def find_stories(url: Url, alias: str,
-                           response_text: str, name: str, cls_name: str, features: str
+                           response_text: str, name: str,
+                           cls_name: str, features: str
                            ) -> list:
         """
         for websites w/o apis
         """
         print(f"searching url: {url}")
-        soup = BeautifulSoup(response_text, features=features)
+        soup = BeautifulSoup(response_text.encode('ascii', errors='ignore').decode('utf-8'), features=features)
         _stories = []
 
         def _return_sibling(tag: Tag):
@@ -182,9 +183,9 @@ class News():
                     'H0': _return_sibling(i.previousSibling),
                     'H1': _return_sibling(i),
                     'H2': _return_sibling(i.nextSibling),
+                    'date': datetime.now(),
                     'alias': alias,
-                    'url': url,
-                    'date': datetime.now()
+                    'url': url
                 }
 
                 if len(main_stories_dict) > 0:
