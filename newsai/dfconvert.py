@@ -11,11 +11,13 @@ try:
     import dask.dataframe as dd
 except ImportError:
     pass
-from .utils import run_from_ipython
+from .utils.ipython import run_from_ipython
+from .utils.nlogger import Log
 
+log = Log(__name__)
 
-if run_from_ipython() is True:
-    print('Ipython active')
+if run_from_ipython:
+    log.info('Ipython active')
     standardpath = join(dirname(getcwd()), 'data')
 else:
     standardpath = join(getcwd(), r'data')
@@ -49,10 +51,9 @@ class Dstore(object):
     def load_df(self, **kwargs):
         filename = self.filename
         filetype = self.filetype
-        print(filename)
         if filetype in storagetypes:
             fn = "self." + filetype + "_load(filename, **kwargs)"
-            print("Loading " + filetype + ": " + filename)
+            log.info("Loading " + filetype + ": " + filename)
 
             if not exists(filename):
                 raise FileNotFoundError
@@ -60,7 +61,7 @@ class Dstore(object):
             dataframe = eval(fn)
 
             if dataframe is not None:
-                print("dataframe loaded successfully")
+                log.info("dataframe loaded successfully")
 
             return dataframe
         else:
@@ -76,7 +77,7 @@ class Dstore(object):
 
         if filetype in storagetypes:
             fn = "self.dfto" + filetype + "(dataframe, filename, **kwargs)"
-            print("Storing " + filetype + ": " + filename)
+            log.info("Storing " + filetype + ": " + filename)
 
             if exists(filename):
                 raise FileExistsError
@@ -84,7 +85,7 @@ class Dstore(object):
             create_path(dirname(filename))
             exec(fn)
 
-            print("dataframe stored successfully")
+            log.info("DataFrame stored successfully")
             return filename
 
         else:
@@ -104,11 +105,12 @@ class Dstore(object):
             if not exists(filename):
                 raise FileNotFoundError
 
-            fn = "self." + filetype + "_dfappend(dataframe, filename, **kwargs)"
-            print("Appending " + filetype + ": " + filename)
+            fn = "self." + filetype + \
+                "_dfappend(dataframe, filename, **kwargs)"
+            log.info("Appending " + filetype + ": " + filename)
 
             exec(fn)
-            print("dataframe updated successfully")
+            log.info("DataFrame appended successfully")
             return filename
 
         else:
@@ -149,7 +151,8 @@ class Dstore(object):
         try:
             df = pd.read_hdf(hdffile, 'df')
         except Exception as e:
-            print(f'Could not load data using pandas read_hdf. Error {e}')
+            log.error(f'Could not load data using pandas read_hdf. Error {e}')
+            raise
         return df
 
     ###########################################################

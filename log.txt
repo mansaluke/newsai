@@ -1,0 +1,68 @@
+2020-05-13 09:50:06,282 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-13 09:50:06,286 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-13 09:50:06,325 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-13 09:50:06,326 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-13 09:50:06,326 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-13 09:50:06,516 - newsai.async_download - INFO - Status: 200
+2020-05-13 09:50:06,533 - newsai.async_download - DEBUG - searching url: https://www.foxnews.com/
+2020-05-13 09:50:06,739 - newsai.async_download - INFO - Status: 200
+2020-05-13 09:50:06,783 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-13 09:50:06,894 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-13 09:50:06,995 - newsai.async_download - INFO - Status: 200
+2020-05-13 09:50:06,998 - newsai.async_download - DEBUG - searching url: https://abcnews.go.com/
+2020-05-13 09:50:07,716 - newsai.async_download - INFO - Status: 200
+2020-05-13 09:50:07,789 - newsai.dfconvert - INFO - Storing csv: C:\Users\mcleary\Documents\Python Scripts\newsai\data\all_stories.csv
+2020-05-13 09:50:07,790 - newsai.dfconvert - INFO - Appending csv: C:\Users\mcleary\Documents\Python Scripts\newsai\data\all_stories.csv
+2020-05-13 09:50:07,797 - newsai.dfconvert - INFO - DataFrame appended successfully
+2020-05-14 13:19:17,442 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 13:19:17,445 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 13:19:17,535 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 13:19:17,536 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 13:19:17,537 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 13:19:17,690 - newsai.async_download - INFO - Status: 200
+2020-05-14 13:19:17,707 - newsai.async_download - DEBUG - searching url: https://www.foxnews.com/
+2020-05-14 13:19:18,314 - newsai.async_download - INFO - Status: 200
+2020-05-14 13:19:18,316 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 13:19:18,500 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 13:19:18,858 - newsai.async_download - INFO - Status: 200
+2020-05-14 13:19:18,944 - newsai.async_download - DEBUG - searching url: https://abcnews.go.com/
+2020-05-14 13:19:19,945 - newsai.async_download - INFO - Status: 200
+2020-05-14 13:19:20,352 - newsai.dfconvert - INFO - Storing csv: C:\Users\mcleary\Documents\Python Scripts\newsai\data\all_stories.csv
+2020-05-14 13:19:20,353 - newsai.dfconvert - INFO - Appending csv: C:\Users\mcleary\Documents\Python Scripts\newsai\data\all_stories.csv
+2020-05-14 13:19:20,380 - newsai.dfconvert - INFO - DataFrame appended successfully
+2020-05-14 14:00:28,613 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 14:00:28,617 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 14:00:28,686 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 14:00:28,688 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 14:00:28,689 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 14:00:28,982 - newsai.async_download - INFO - Status: 200
+2020-05-14 14:00:28,996 - newsai.async_download - INFO - Status: 200
+2020-05-14 14:00:29,027 - newsai.async_download - DEBUG - searching url: https://www.foxnews.com/
+2020-05-14 14:00:29,618 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 14:00:29,918 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 14:00:30,259 - newsai.async_download - INFO - Status: 200
+2020-05-14 14:00:30,261 - newsai.async_download - DEBUG - searching url: https://abcnews.go.com/
+2020-05-14 14:00:31,200 - newsai.async_download - INFO - Status: 200
+2020-05-14 14:02:53,840 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 14:02:53,848 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 14:02:53,923 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 14:02:53,926 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 14:02:53,927 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 14:09:04,429 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 14:09:04,438 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 14:09:04,536 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 14:09:04,538 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 14:09:04,541 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 14:09:05,489 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/archive/v1/2020/1.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 14:09:18,520 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 14:09:18,565 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 14:09:18,612 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 14:09:18,615 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 14:09:18,616 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 14:09:19,622 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/archive/v1/2020/1.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 14:09:29,228 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 14:09:29,232 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 14:09:29,277 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 14:09:29,278 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 14:09:29,279 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 14:09:30,169 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/archive/v1/2020/1.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv

@@ -1,6 +1,7 @@
 __all__ = ["News", "HistoricalNews"]
 
 import sys
+from os import getcwd
 from os.path import dirname, join, realpath
 import time
 import typing
@@ -12,10 +13,13 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 from datetime import datetime
 import pandas as pd
-from .utils import run_from_ipython
+from .utils.ipython import run_from_ipython
+from .utils.nlogger import Log
+
+log = Log("asyncio")
 
 assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
-assert not run_from_ipython(), "Ipython not yet supported."
+
 
 Url = str
 Path = typing.Union[str, pathlib.Path]
@@ -33,11 +37,12 @@ class News():
             self.load_json(j_name), **kwargs
         )
 
-    def __call__(self):
-        self.add_futures(
-            self.j_dict
-        )
-        return self.run_async()
+    def __call__(self) -> list:
+        if run_from_ipython:
+            raise AttributeError(
+                "If called iPython run_async() function should be called directly. e.g. await News().run_async()")
+        else:
+            return self.run_async()[1]
 
     @staticmethod
     def filter_by_val(j_dict: dict, **kwargs: str) -> dict:
@@ -56,9 +61,14 @@ class News():
 
     @staticmethod
     def load_json(j_name: dict) -> dict:
-        json_path = join(
-            dirname(realpath(__file__)), j_name
-        )
+        if not run_from_ipython:
+            json_path = join(
+                dirname(realpath(__file__)), j_name
+            )
+        else:
+            json_path = join(
+                join(dirname(getcwd()), 'newsai'), j_name
+            )
         with open(json_path) as f:
             return load(f)
 
@@ -96,18 +106,27 @@ class News():
             )
 
     def run_async(self) -> list:
+        self.add_futures(
+            self.j_dict
+        )
         loop = asyncio.get_event_loop()
         get_url_futures = asyncio.gather(
             *[f for f in self.responses.values()])
         find_text_futures = asyncio.gather(
             *[f for f in self.find_futures_list])
 
-        return loop.run_until_complete(
-            asyncio.gather(get_url_futures, find_text_futures)
-        )[1]
+        final_future = asyncio.gather(get_url_futures, find_text_futures)
+
+        if not run_from_ipython:
+            return loop.run_until_complete(
+                final_future
+            )
+        else:
+            return asyncio.ensure_future(
+                final_future)
 
     async def exec_get(self, url: Url):
-        print(f'getting {url}')
+        log.debug(f'getting {url}')
         async with ClientSession() as session:
             self.responses[url] = await self.fetch_stories(
                 session, url
@@ -132,7 +151,7 @@ class News():
         await self.responses[url]
         json_out = loads(self.responses[url])
 
-        if type(json_key['filter']) is str:
+        if isinstance(json_key['filter'], str):
             json_key['filter'] = [json_key['filter']]
         results = json_out
         for fltr in json_key['filter']:
@@ -142,7 +161,10 @@ class News():
         for story in results:
             main_stories_dict = {}
             for k, v in json_key['attribute'].items():
-                main_stories_dict.update({k: story[v]})
+                story_clean = story[v].encode(
+                    'ascii', errors='ignore').decode('utf-8')
+                main_stories_dict.update(
+                    {k: story_clean})
             main_stories_dict.update({
                 'alias': alias,
                 'url': url
@@ -153,7 +175,7 @@ class News():
     async def fetch_stories(self, session: ClientSession,
                             url: Url):
         async with session.get(url) as response:
-            print("Status: ", response.status)
+            log.info(f"Status: {response.status}")
             return await response.text()
 
     @staticmethod
@@ -164,8 +186,9 @@ class News():
         """
         for websites w/o apis
         """
-        print(f"searching url: {url}")
-        soup = BeautifulSoup(response_text.encode('ascii', errors='ignore').decode('utf-8'), features=features)
+        log.debug(f"searching url: {url}")
+        soup = BeautifulSoup(response_text.encode(
+            'ascii', errors='ignore').decode('utf-8'), features=features)
         _stories = []
 
         def _return_sibling(tag: Tag):
@@ -191,7 +214,7 @@ class News():
                 if len(main_stories_dict) > 0:
                     _stories.append(main_stories_dict)
                 else:
-                    print(f'warning: dict empty for url: {url}')
+                    log.warning(f'Empty dictionary returned for url: {url}')
         return _stories
 
 
@@ -206,7 +229,4 @@ class HistoricalNews(News):
             element["url"] = element["url"].format(year, month)
 
     def __call__(self) -> list:
-        self.add_futures(
-            self.j_dict
-        )
-        return self.run_async()
+        return self.run_async()[1]

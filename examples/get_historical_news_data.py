@@ -6,6 +6,9 @@ file_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, file_path + "/..")
 from newsai.dfconvert import Dstore
 from newsai.async_download import HistoricalNews
+from newsai.utils.nlogger import Log
+
+log = Log(__name__)
 
 
 if __name__ == "__main__":
@@ -13,20 +16,20 @@ if __name__ == "__main__":
     df = pd.DataFrame()
     for m in range(1, 4):
         try:
-            print(m)
+            log.info(f'Downloading month: {m}')
             m = HistoricalNews(year=2020, month=m)
             out = m()
 
             for i in out:
                 df = df.append(pd.DataFrame(i))
-                print(df)
+
             for col in ['H1', 'H2']:
                 try:
                     df[col] = df[col].str.replace('\n+', '. ')
                 except Exception as e:
-                    print(e)
+                    log.error(e)
         except Exception as e:
-            print(e)
+            log.error(e)
     print(df.head())
 
     file_name = 'hist.csv'
