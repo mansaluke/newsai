@@ -14,6 +14,7 @@ setup(
     url="https://github.com/mansaluke/newsai",
     package_dir={"": "src"},
     packages=find_packages("src"),
+    include_package_data=True,
     install_requires=[
         "aiohttp",
         "bs4",
