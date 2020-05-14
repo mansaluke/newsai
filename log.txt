@@ -91,3 +91,9 @@
 2020-05-14 17:48:31,637 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
 2020-05-14 17:48:31,638 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
 2020-05-14 17:48:33,036 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/archive/v1/2020/1.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 18:16:35,077 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 18:16:35,080 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 18:16:35,125 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 18:16:35,126 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 18:16:35,127 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 18:16:36,511 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/archive/v1/2020/1.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
