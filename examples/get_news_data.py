@@ -1,9 +1,6 @@
 import sys
 import os
 import pandas as pd
-
-file_path = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, file_path + "/..")
 from newsai.dfconvert import Dstore
 from newsai.async_download import News
 from newsai.utils.nlogger import Log, DEBUG
@@ -30,7 +27,7 @@ if __name__ == "__main__":
     print(df)
     file_name = 'all_stories.csv'
 
-    try:
-        Dstore(file_name).store_df(df)
-    except FileExistsError:
-        Dstore(file_name).append_df(df)
+    # try:
+    #     Dstore(file_name).store_df(df)
+    # except FileExistsError:
+    #     Dstore(file_name).append_df(df)

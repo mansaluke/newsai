@@ -1,6 +1,6 @@
 ### News api - gets current news data quickly
 
-Downloads current data from:
+API downloads current data from:
 - BBC News
 - FOX News
 - ABC News
@@ -8,4 +8,8 @@ Downloads current data from:
 
 Historical data from:
 - NYTimes
-(Also find million headlines dataset from ABC news)
+
+Also find:
+- million headlines dataset (Kaggle - ABC news)
+- RTE datasets (GLUE)
+- stsbenchmark

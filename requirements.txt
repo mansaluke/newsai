@@ -1,5 +1,0 @@
-aiofiles
-aiohttp
-bs4
-pandas
-termcolor

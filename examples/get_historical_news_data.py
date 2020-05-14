@@ -1,9 +1,6 @@
 import sys
 import os
 import pandas as pd
-
-file_path = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, file_path + "/..")
 from newsai.dfconvert import Dstore
 from newsai.async_download import HistoricalNews
 from newsai.utils.nlogger import Log
