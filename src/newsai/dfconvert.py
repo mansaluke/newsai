@@ -11,8 +11,8 @@ try:
     import dask.dataframe as dd
 except ImportError:
     pass
-from .utils.ipython import run_from_ipython
-from .utils.nlogger import Log
+from newsai.utils.ipython import run_from_ipython
+from newsai.utils.nlogger import Log
 
 log = Log(__name__)
 

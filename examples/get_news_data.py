@@ -27,7 +27,7 @@ if __name__ == "__main__":
     print(df)
     file_name = 'all_stories.csv'
 
-    # try:
-    #     Dstore(file_name).store_df(df)
-    # except FileExistsError:
-    #     Dstore(file_name).append_df(df)
+    try:
+        Dstore(file_name).store_df(df)
+    except FileExistsError:
+        Dstore(file_name).append_df(df)

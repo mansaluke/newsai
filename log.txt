@@ -97,3 +97,22 @@
 2020-05-14 18:16:35,126 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
 2020-05-14 18:16:35,127 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
 2020-05-14 18:16:36,511 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/archive/v1/2020/1.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 18:59:28,580 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 18:59:28,587 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 18:59:28,660 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 18:59:28,661 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 18:59:28,662 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 18:59:30,117 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/archive/v1/2020/1.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 18:59:55,679 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 18:59:55,685 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 18:59:55,732 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 18:59:55,734 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 18:59:55,735 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 18:59:56,331 - newsai.async_download - INFO - Status: 200
+2020-05-14 18:59:56,395 - newsai.async_download - INFO - Status: 200
+2020-05-14 18:59:56,508 - newsai.async_download - DEBUG - searching url: https://www.foxnews.com/
+2020-05-14 18:59:56,940 - newsai.async_download - INFO - Status: 200
+2020-05-14 18:59:56,942 - newsai.async_download - INFO - Status: 200
+2020-05-14 18:59:56,947 - newsai.async_download - DEBUG - searching url: https://abcnews.go.com/
+2020-05-14 18:59:57,366 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 18:59:57,565 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
