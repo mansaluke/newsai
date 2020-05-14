@@ -1,8 +1,8 @@
-__all__ = ["run_from_ipython", "Dstore", "mkdir_p", "create_path"]
+__all__ = ["Dstore", "mkdir_p", "create_path"]
 
 import sys
 from os import getcwd, makedirs
-from os.path import dirname, join, exists, isdir
+from os.path import dirname, join, exists, isdir, basename
 import json
 import pickle
 from datetime import datetime
@@ -11,16 +11,9 @@ try:
     import dask.dataframe as dd
 except ImportError:
     pass
-from .utils.ipython import run_from_ipython
 from .utils.nlogger import Log
 
 log = Log(__name__)
-
-if run_from_ipython:
-    log.info('Ipython active')
-    standardpath = join(dirname(getcwd()), 'data')
-else:
-    standardpath = join(getcwd(), r'data')
 
 
 storagetypes = ["pickle", "json", "csv", "parquet", "feather", "h5"]
@@ -39,12 +32,10 @@ class Dstore(object):
     """
 
     def __init__(self, filename, *args):
-        if args:
-            self.filename = join(*args, filename)
-        else:
-            self.filename = join(standardpath, filename)
+
+        self.filename = filename
         try:
-            self.filetype = self.filename.split(".", -1)[1]
+            self.filetype = basename(self.filename).split(".", -1)[1]
         except IndexError:
             self.filetype = "pickle"
 

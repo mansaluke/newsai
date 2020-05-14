@@ -2955,3 +2955,5 @@ TypeError: object str can't be used in 'await' expression
 2020-05-14 13:58:37,164 - newsai.async_download - INFO - Status: 200
 2020-05-14 13:58:37,164 - newsai.async_download - INFO - Status: 200
 2020-05-14 17:46:55,073 - newsai.dfconvert - INFO - Ipython active
+2020-05-14 19:33:58,397 - newsai.dfconvert - INFO - Ipython active
+2020-05-14 19:40:03,951 - newsai.dfconvert - INFO - Ipython active

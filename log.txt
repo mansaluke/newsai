@@ -116,3 +116,18 @@
 2020-05-14 18:59:56,947 - newsai.async_download - DEBUG - searching url: https://abcnews.go.com/
 2020-05-14 18:59:57,366 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
 2020-05-14 18:59:57,565 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 19:50:41,910 - newsai.async_download - DEBUG - Using selector: SelectSelector
+2020-05-14 19:50:41,916 - newsai.async_download - DEBUG - getting https://www.bbc.com/news
+2020-05-14 19:50:42,030 - newsai.async_download - DEBUG - getting https://www.foxnews.com/
+2020-05-14 19:50:42,035 - newsai.async_download - DEBUG - getting https://abcnews.go.com/
+2020-05-14 19:50:42,040 - newsai.async_download - DEBUG - getting https://api.nytimes.com/svc/topstories/v2/home.json?api-key=eBq6OD6zH4nB44UytxFeMNsJtL8A4pdv
+2020-05-14 19:50:42,710 - newsai.async_download - INFO - Status: 200
+2020-05-14 19:50:42,733 - newsai.async_download - INFO - Status: 200
+2020-05-14 19:50:42,842 - newsai.async_download - DEBUG - searching url: https://www.foxnews.com/
+2020-05-14 19:50:43,402 - newsai.async_download - INFO - Status: 200
+2020-05-14 19:50:43,404 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 19:50:43,585 - newsai.async_download - DEBUG - searching url: https://www.bbc.com/news
+2020-05-14 19:50:43,808 - newsai.async_download - DEBUG - searching url: https://abcnews.go.com/
+2020-05-14 19:50:44,775 - newsai.async_download - INFO - Status: 200
+2020-05-14 19:50:44,876 - newsai.dfconvert - INFO - Storing csv: c:\users\mcleary\documents\python scripts\newsai\data\hist.csv
+2020-05-14 19:50:44,902 - newsai.dfconvert - INFO - DataFrame stored successfully

@@ -18,7 +18,7 @@ from .utils.nlogger import Log
 
 log = Log("asyncio")
 
-# assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
+assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
 
 
 Url = str

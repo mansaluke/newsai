@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from newsai.dfconvert import Dstore
 from newsai.async_download import News
+from newsai import _DATA_PATH
 from newsai.utils.nlogger import Log, DEBUG
 
 Log.set_lvl(DEBUG)
@@ -24,10 +25,11 @@ if __name__ == "__main__":
         except Exception as e:
             log.error(e)
 
-    print(df)
+    print(df.head())
     file_name = 'all_stories.csv'
+    file_path = os.path.join(_DATA_PATH, file_name)
 
     try:
-        Dstore(file_name).store_df(df)
+        Dstore(file_path).store_df(df)
     except FileExistsError:
-        Dstore(file_name).append_df(df)
+        Dstore(file_path).append_df(df)
