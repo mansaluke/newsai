@@ -7,7 +7,7 @@ from nltk import ngrams
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from re import sub
-from newsai.utils.nlogger import Log
+from .nlogger import Log
 
 log = Log(__name__)
 

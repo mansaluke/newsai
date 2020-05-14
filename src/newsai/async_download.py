@@ -13,8 +13,8 @@ from bs4 import BeautifulSoup
 from bs4.element import Tag
 from datetime import datetime
 import pandas as pd
-from newsai.utils.ipython import run_from_ipython
-from newsai.utils.nlogger import Log
+from .utils.ipython import run_from_ipython
+from .utils.nlogger import Log
 
 log = Log("asyncio")
 
