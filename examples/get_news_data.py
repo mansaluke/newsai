@@ -3,11 +3,10 @@ import os
 import pandas as pd
 from newsai.dfconvert import Dstore
 from newsai.async_download import News
-from newsai import _DATA_PATH
-from newsai.utils.nlogger import Log, DEBUG
+from newsai import Log, _DATA_PATH
 
-Log.set_lvl(DEBUG)
 log = Log(__name__)
+
 
 if __name__ == "__main__":
 
@@ -26,7 +25,7 @@ if __name__ == "__main__":
             log.error(e)
 
     print(df.head())
-    file_name = 'all_stories.csv'
+    file_name = 'sample_stories.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
     try:

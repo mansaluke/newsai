@@ -8,8 +8,3 @@ API downloads current data from:
 
 Historical data from:
 - NYTimes
-
-Also find:
-- million headlines dataset (Kaggle - ABC news)
-- RTE datasets (GLUE)
-- stsbenchmark

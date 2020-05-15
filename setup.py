@@ -6,7 +6,7 @@ setup(
     version="0.9",
     author="Luke Mcleary",
     author_email="lukemcleary95@gmail.com",
-    description="News extraction and processor API",
+    description="News API",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     keywords="News asyncio NLP deep learning transformer pytorch",
@@ -15,6 +15,7 @@ setup(
     package_dir={"": "src"},
     packages=find_packages("src"),
     include_package_data=True,
+    # package_data={"": ["../data/*.csv"]},
     install_requires=[
         "aiohttp",
         "bs4",
@@ -24,7 +25,8 @@ setup(
     python_requires=">=3.6.0",
     classifiers=[
         "Development Status :: Development/Unstable",
-        "Operating System :: Windows",
+        'Programming Language :: Python',
+        "Operating System :: Microsoft :: Windows",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",

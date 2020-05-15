@@ -3,9 +3,10 @@ import os
 import pandas as pd
 from newsai.dfconvert import Dstore
 from newsai.async_download import HistoricalNews
-from newsai import _DATA_PATH
-from newsai.utils.nlogger import Log
+from newsai import _DATA_PATH, Log
+from newsai.utils.nlogger import WARNING
 
+Log.set_lvl(WARNING)
 log = Log(__name__)
 
 
@@ -30,10 +31,11 @@ if __name__ == "__main__":
             log.error(e)
     print(df.head())
 
-    file_name = 'hist.csv'
+    file_name = 'sample_historicals.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
     try:
         Dstore(file_path).store_df(df)
     except FileExistsError:
-        Dstore(file_path).append_df(df)
+        log.error('File already exists')
+        # Dstore(file_path).append_df(df)
