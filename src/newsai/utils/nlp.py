@@ -18,6 +18,7 @@ lemmatizer = WordNetLemmatizer()
 
 def activate_nltk():
     global stop_words
+    nltk.download('wordnet')
     nltk.download('stopwords')
     nltk.download('punkt')
     stop_words = set(stopwords.words('english'))
