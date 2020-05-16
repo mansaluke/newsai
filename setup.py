@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name="transformers",
+    name="newsai",
     version="0.9",
     author="Luke Mcleary",
     author_email="lukemcleary95@gmail.com",
