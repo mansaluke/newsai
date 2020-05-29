@@ -1,8 +1,8 @@
 This library is made of two parts:
-- Extraction (requires Python 3.7+) with aiohttp
-- Analysis (WIP) with the Pytorch implementation of 🤗 Transformers
+- ``Extraction`` (requires Python 3.7+) with aiohttp
+- ``Analysis`` (WIP) with the Pytorch implementation of 🤗 Transformers
 
-### News api download sources
+#### News api download sources
 Current data:
 - BBC News
 - FOX News
@@ -12,8 +12,18 @@ Current data:
 Historical news data from:
 - NYTimes
 
+Other news sources:
+ - https://github.com/abisee/cnn-dailymail processes the https://cs.nyu.edu/~kcho/DMQA/ DeepMind Dataset (2015 - CNN & DailyMail)
+ - Kaggle million-headlines dataset (ABC News)
+ - GLUE & SUPERGLUE RTE datasets
 
-### Analysis (NLP)
+#### Usage
+``` cmd
+python examples/get_historical_news_data.py
+python examples/get_news_data.py
+```
+
+#### Analysis (NLP)
 
 Run nlp examples from colab for an idea of whats to come.
 
