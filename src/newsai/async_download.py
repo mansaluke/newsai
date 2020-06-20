@@ -2,27 +2,23 @@ __all__ = ["News", "HistoricalNews"]
 
 import sys
 from os import getcwd
-from os.path import dirname, join, realpath
+from os.path import dirname, join, realpath, basename
+from collections import defaultdict
 import time
 import typing
-import pathlib
 from json import load, loads
 import asyncio
 from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-from datetime import datetime
 import pandas as pd
 from .utils.ipython import run_from_ipython
 from .utils.nlogger import Log
+from .newstypes import NewsDump, Url, Path, NewsDumpDict, StoryDict
 
 log = Log("asyncio")
 
 assert sys.version_info >= (3, 7), "Requirement: Python 3.7+."
-
-
-Url = str
-Path = typing.Union[str, pathlib.Path]
 
 
 class News():
@@ -31,6 +27,7 @@ class News():
                  j_name: Path = 'url_config.json',
                  **kwargs: str):
 
+        self.j_name = j_name
         self.find_futures_list = []
         self.responses = {}
         self.j_dict = self.filter_by_val(
@@ -40,9 +37,14 @@ class News():
     def __call__(self) -> list:
         if run_from_ipython:
             raise AttributeError(
-                "If called iPython run_async() function should be called directly. e.g. await News().run_async()")
+                "If called iPython run_async() function should be called " +
+                "directly. e.g. await News().run_async()")
         else:
-            return self.run_async()[1]
+            return self.run_async()
+
+    def __repr__(self):
+        return (f'{self.__class__.__name__}('
+                f'config: {basename(self.j_name)})')
 
     @staticmethod
     def filter_by_val(j_dict: dict, **kwargs: str) -> dict:
@@ -73,9 +75,9 @@ class News():
             return load(f)
 
     def add_futures(self, j_file: Path):
-        for v in j_file.values():
+        for k, v in j_file.items():
             self.build_futures_get(v['url'])
-            self.build_futures_search(v)
+            self.build_futures_search(int(k), v)
 
     def build_futures_get(self, url: Url):
         if url not in self.responses:
@@ -84,7 +86,7 @@ class News():
                     url=url)
             )
 
-    def build_futures_search(self, url_info: dict):
+    def build_futures_search(self, config_id: int, url_info: dict):
         try:
             self.find_futures_list.append(
                 asyncio.ensure_future(self.exec_find(
@@ -92,7 +94,8 @@ class News():
                     url_info["alias"],
                     url_info["name"],
                     url_info["cls_name"],
-                    url_info["features"]
+                    url_info["features"],
+                    config_id
                 )
                 )
             )
@@ -101,14 +104,13 @@ class News():
                 asyncio.ensure_future(self.json_selector(
                     url_info["url"],
                     url_info["alias"],
-                    url_info["json_key"])
+                    url_info["json_key"],
+                    config_id)
                 )
             )
 
-    def run_async(self) -> list:
-        self.add_futures(
-            self.j_dict
-        )
+    def run_async(self) -> NewsDumpDict:
+        self.add_futures(self.j_dict)
         loop = asyncio.get_event_loop()
         get_url_futures = asyncio.gather(
             *[f for f in self.responses.values()])
@@ -118,12 +120,10 @@ class News():
         final_future = asyncio.gather(get_url_futures, find_text_futures)
 
         if not run_from_ipython:
-            return loop.run_until_complete(
-                final_future
-            )
+            loop.run_until_complete(final_future)
         else:
-            return asyncio.ensure_future(
-                final_future)
+            asyncio.ensure_future(final_future)
+        return NewsDump.story_dump
 
     async def exec_get(self, url: Url):
         log.debug(f'getting {url}')
@@ -134,20 +134,20 @@ class News():
 
     async def exec_find(self, url: Url, alias: str,
                         name: str, cls_name: str,
-                        features: str) -> list:
+                        features: str, config_id: str):
         await self.responses[url]
-        stories_out = await self.find_stories(
+        await self.find_stories(
             url,
             alias,
             self.responses[url],
             name,
             cls_name,
-            features
+            features,
+            config_id
         )
-        return stories_out
 
     async def json_selector(self, url: Url, alias: str,
-                            json_key: dict) -> list:
+                            json_key: dict, config_id: int = 0):
         await self.responses[url]
         json_out = loads(self.responses[url])
 
@@ -157,20 +157,19 @@ class News():
         for fltr in json_key['filter']:
             results = results[fltr]
 
+        nd = NewsDump(config_id, url, alias)
+
         _stories = []
         for story in results:
-            main_stories_dict = {}
+            sd = StoryDict()
             for k, v in json_key['attribute'].items():
-                story_clean = story[v].encode(
-                    'ascii', errors='ignore').decode('utf-8')
-                main_stories_dict.update(
-                    {k: story_clean})
-            main_stories_dict.update({
-                'alias': alias,
-                'url': url
-            })
-            _stories.append(main_stories_dict)
-        return _stories
+                if k in ('H0', 'H1', 'H2'):
+                    val = story[v].encode(
+                        'ascii', errors='ignore').decode('utf-8')
+                else:
+                    val = story[v]
+                sd.update(**{k: val})
+            nd.add_story(config_id, **sd)
 
     async def fetch_stories(self, session: ClientSession,
                             url: Url):
@@ -181,11 +180,14 @@ class News():
     @staticmethod
     async def find_stories(url: Url, alias: str,
                            response_text: str, name: str,
-                           cls_name: str, features: str
-                           ) -> list:
+                           cls_name: str, features: str,
+                           config_id: str = 0
+                           ):
         """
         for websites w/o apis
         """
+        nd = NewsDump(config_id, url, alias, name, cls_name, features)
+
         log.debug(f"searching url: {url}")
         soup = BeautifulSoup(response_text.encode(
             'ascii', errors='ignore').decode('utf-8'), features=features)
@@ -201,21 +203,16 @@ class News():
             cls_name = [cls_name]
 
         for c in cls_name:
-            for i in soup.find_all(name, {"class": c}):
-                main_stories_dict = {
-                    'H0': _return_sibling(i.previousSibling),
-                    'H1': _return_sibling(i),
-                    'H2': _return_sibling(i.nextSibling),
-                    'date': datetime.now(),
-                    'alias': alias,
-                    'url': url
-                }
-
-                if len(main_stories_dict) > 0:
-                    _stories.append(main_stories_dict)
-                else:
-                    log.warning(f'Empty dictionary returned for url: {url}')
-        return _stories
+            element = soup.find_all(name, {"class": c})
+            if len(element) == 0:
+                log.warning('No output returned for id: {0}, cls_name: {1}, url: {2}'.format(
+                    config_id, cls_name, url))
+            for i in element:
+                nd.add_story(config_id,
+                             _return_sibling(i.previousSibling),
+                             _return_sibling(i),
+                             _return_sibling(i.nextSibling)
+                             )
 
 
 class HistoricalNews(News):
@@ -225,8 +222,15 @@ class HistoricalNews(News):
                  j_name: Path = 'url_hist_config.json',
                  **kwargs: str):
         super().__init__(j_name=j_name, **kwargs)
+        self.year = year
+        self.month = month
         for element in self.j_dict.values():
             element["url"] = element["url"].format(year, month)
 
     def __call__(self) -> list:
-        return self.run_async()[1]
+        return self.run_async()
+
+    def __repr__(self):
+        return (f'{self.__class__.__name__}('
+                f'config: {basename(self.j_name)}, '
+                f'year: {self.year}, month: {self.month})')

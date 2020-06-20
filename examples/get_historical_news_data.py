@@ -16,11 +16,12 @@ if __name__ == "__main__":
     for m in range(1, 4):
         try:
             log.info(f'Downloading month: {m}')
-            m = HistoricalNews(year=2020, month=m)
-            out = m()
-
-            for i in out:
-                df = df.append(pd.DataFrame(i))
+            h = HistoricalNews(year=2020, month=m)
+            out = h()
+            print(out.keys())
+            for i in out.values():
+                df_out = df.append(pd.DataFrame(i.to_pandas()))
+                df = df.append(df_out, ignore_index=True)
 
             for col in ['H1', 'H2']:
                 try:

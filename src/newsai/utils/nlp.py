@@ -16,6 +16,19 @@ stop_words = set()
 lemmatizer = WordNetLemmatizer()
 
 
+def split_on_uppercase(string_input):
+    matches = [
+        match.span()[0]+1 for match in re.finditer(
+            re.compile(r'(\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
+            string_input)]
+    matches.insert(0, 0)
+    matches.append(len(string_input))
+    out = []
+    for i in range(len(matches)-1):
+        out.append(string_input[matches[i]: matches[i+1]])
+    return out
+
+
 def activate_nltk():
     global stop_words
     nltk.download('wordnet')
@@ -25,11 +38,11 @@ def activate_nltk():
     return stop_words
 
 
-try:
-    activate_nltk()
-except Exception as e:
-    log.warning(
-        f'Could not activate nltk. no stop words defined. Exception: {e}')
+# try:
+#     activate_nltk()
+# except Exception as e:
+#     log.warning(
+#         f'Could not activate nltk. no stop words defined. Exception: {e}')
 
 
 symbol_map = {r"[^A-Za-z0-9^,!?.\/'+]": " ",

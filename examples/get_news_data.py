@@ -14,15 +14,16 @@ if __name__ == "__main__":
     out = m()
     df = pd.DataFrame()
 
-    for i in out:
-        df_out = pd.DataFrame(i)
+    for i in out.values():
+        df_out = pd.DataFrame(i.to_pandas())
         df = df.append(df_out, ignore_index=True)
+        df.drop_duplicates(subset=None, keep='first', inplace=True)
 
-    for col in ['H0', 'H1', 'H2']:
-        try:
-            df[col] = df[col].str.replace('\n+', '. ')
-        except Exception as e:
-            log.error(e)
+    # for col in ['H0', 'H1', 'H2']:
+    #     try:
+    #         df[col] = df[col].str.replace('\n+', ' ')
+    #     except Exception as e:
+    #         log.error(e)
 
     print(df.head())
     file_name = 'sample_stories.csv'
