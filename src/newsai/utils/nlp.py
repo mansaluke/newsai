@@ -19,7 +19,7 @@ lemmatizer = WordNetLemmatizer()
 def split_on_uppercase(string_input):
     matches = [
         match.span()[0]+1 for match in re.finditer(
-            re.compile(r'(\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
+            re.compile(r'([\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
             string_input)]
     matches.insert(0, 0)
     matches.append(len(string_input))
