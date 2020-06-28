@@ -44,7 +44,7 @@
             "attribute": {
                 "H0": "title",
                 "H1": "abstract",
-                "date": "published_date"
+                "published_date": "published_date"
             }
         }
     }

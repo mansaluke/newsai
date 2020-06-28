@@ -2,12 +2,11 @@ import sys
 import os
 import numpy as np
 import pandas as pd
-from newsai.dfconvert import Dstore
 from newsai.async_download import News
 from newsai import Log, _DATA_PATH
 from newsai.utils import nlp
 
-log = Log(__name__)
+log = Log(os.path.basename(__file__))
 
 
 if __name__ == "__main__":
@@ -25,19 +24,25 @@ if __name__ == "__main__":
     log.info(f'Removing sentences with a length < 3.')
     for col in header_texts:
         try:
-            short_sentences = (df[col].apply(lambda x: len(str(x).split(' '))) <= 3)
-            df.loc[short_sentences, col]=np.nan
+            short_sentences = (df[col].apply(
+                lambda x: len(str(x).split(' '))) <= 3)
+            df.loc[short_sentences, col] = np.nan
         except Exception as e:
             log.error(e)
 
     df = nlp.remove_null_rows(df, header_texts)
+    df = df[['H0', 'H1', 'H2', 'datetime', 'url', 'alias', 'published_date']]
 
     print(df.head())
     log.info('DataFrame length: {0}'.format(len(df)))
     file_name = 'sample_stories.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
-    try:
-        Dstore(file_path).store_df(df)
-    except FileExistsError:
-        Dstore(file_path).append_df(df)
+    if not os.path.exists(file_path):
+        log.info(f'Writing to: ´{file_path}')
+        df.to_csv(file_path, sep=',', encoding='utf-8', index=False)
+    else:
+        log.info(f'Appending to: ´{file_path}')
+        df.to_csv(file_path, mode='a', header=False, sep=',',
+                  encoding='utf-8', index=False)
+

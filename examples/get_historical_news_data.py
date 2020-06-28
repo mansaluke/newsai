@@ -1,19 +1,21 @@
 import sys
 import os
 import pandas as pd
-from newsai.dfconvert import Dstore
 from newsai.async_download import HistoricalNews
 from newsai import _DATA_PATH, Log
-from newsai.utils.nlogger import WARNING
+from newsai.utils.nlogger import DEBUG
+from newsai.utils import nlp
 
-Log.set_lvl(WARNING)
-log = Log(__name__)
 
+Log.set_lvl(DEBUG)
+log = Log(os.path.basename(__file__))
 
 if __name__ == "__main__":
 
     df = pd.DataFrame()
-    for m in range(1, 4):
+    header_texts = ['H1', 'H2']
+
+    for m in range(1, 5):
         try:
             log.info(f'Downloading month: {m}')
             h = HistoricalNews(year=2020, month=m)
@@ -23,20 +25,19 @@ if __name__ == "__main__":
                 df_out = df.append(pd.DataFrame(i.to_pandas()))
                 df = df.append(df_out, ignore_index=True)
 
-            for col in ['H1', 'H2']:
+            for col in header_texts:
                 try:
                     df[col] = df[col].str.replace('\n+', '. ')
                 except Exception as e:
                     log.error(e)
         except Exception as e:
             log.error(e)
+    df = nlp.remove_null_rows(df, header_texts)
     print(df.head())
+    log.info('DataFrame length: {0}'.format(len(df)))
 
     file_name = 'sample_historicals.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
-    try:
-        Dstore(file_path).store_df(df)
-    except FileExistsError:
-        log.error('File already exists')
-        # Dstore(file_path).append_df(df)
+    log.info(f'Writing to: ´{file_path}')
+    df.to_csv(file_path, encoding='utf-8', index=False)

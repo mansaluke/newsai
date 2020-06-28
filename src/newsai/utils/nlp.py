@@ -14,6 +14,16 @@ log = Log(__name__)
 
 stop_words = set()
 lemmatizer = WordNetLemmatizer()
+symbol_map = {r"[^A-Za-z0-9^,!?.\/'+]": " ",
+              r"\+": " plus ",
+              r",": " ",
+              r"\.": " ",
+              r"!": " ! ",
+              r"\?": " ? ",
+              # r"'": " ",
+              r"\"": " ",
+              r":": " : ",
+              r"\s{2,}": " "}
 
 
 def split_on_uppercase(string_input):
@@ -43,19 +53,6 @@ def activate_nltk():
 # except Exception as e:
 #     log.warning(
 #         f'Could not activate nltk. no stop words defined. Exception: {e}')
-
-
-symbol_map = {r"[^A-Za-z0-9^,!?.\/'+]": " ",
-              r"\+": " plus ",
-              r",": " ",
-              r"\.": " ",
-              r"!": " ! ",
-              r"\?": " ? ",
-              # r"'": " ",
-              r"\"": " ",
-              r":": " : ",
-              r"\s{2,}": " "}
-
 
 def remove_null_rows(df: pd.DataFrame, columns: list):
     """
@@ -101,7 +98,9 @@ def text_to_word_list(text, symb_map: dict = symbol_map):
         text = sub(k, v, text)
 
     def split_words(text_data):
-        return [lemmatizer.lemmatize(w) for w in re.findall(r'\b\S+\b', text.lower()) if w not in stop_words]
+        return \
+            [lemmatizer.lemmatize(w) for w in re.findall(r'\b\S+\b', text.lower())
+             if w not in stop_words]
 
     return split_words(text)
 
