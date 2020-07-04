@@ -35,6 +35,10 @@ if __name__ == "__main__":
 
     print(df.head())
     log.info('DataFrame length: {0}'.format(len(df)))
+
+    log.info('Shifting columns')
+    df = nlp.shift_nulls(df, header_texts)
+
     file_name = 'sample_stories.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
@@ -45,4 +49,3 @@ if __name__ == "__main__":
         log.info(f'Appending to: ´{file_path}')
         df.to_csv(file_path, mode='a', header=False, sep=',',
                   encoding='utf-8', index=False)
-

@@ -1,5 +1,5 @@
 env/
 .vscode/
 __pycache__/
-notebooks/dev/
+*dev*
 *log.txt
