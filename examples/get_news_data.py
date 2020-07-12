@@ -37,9 +37,9 @@ if __name__ == "__main__":
     log.info('DataFrame length: {0}'.format(len(df)))
 
     log.info('Shifting columns')
-    df = nlp.shift_nulls(df, header_texts)
+    df = nlp.shift_nulls(df, header_texts, _remove_null_columns=False)
 
-    file_name = 'sample_stories.csv'
+    file_name = 'sample_stories1.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
     if not os.path.exists(file_path):
