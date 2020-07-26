@@ -1,6 +1,6 @@
 This library is made of two parts:
-- ``Extraction`` (requires Python 3.7+) with aiohttp
-- ``Analysis`` (WIP) with the Pytorch implementation of 🤗 Transformers
+- ``Extraction`` (STABLE) (requires Python 3.7+)
+- ``Analysis`` (WIP)
 
 #### News api download sources
 Current data:
