@@ -47,5 +47,49 @@
                 "published_date": "published_date"
             }
         }
+    },
+    "6": {
+        "url": "https://finance.yahoo.com/",
+        "alias": "yahoofinance",
+        "name": "",
+        "cls_name": [
+            "Fz(s) Ell Fw(600) C($linkColor)",
+            "My(5%) My(2%)--md1100",
+            "Fz(12px) Fw(n) Lh(14px) LineClamp(3,42px) Pt(6px) Tov(e)",
+            "Mb(5px)",
+            "Fz(14px) Lh(19px) Fz(13px)--sm1024 Lh(17px)--sm1024 LineClamp(3,57px) LineClamp(3,51px)--sm1024 M(0)",
+            "Fz(14px) Lh(19px) Fz(13px)--sm1024 Lh(17px)--sm1024 LineClamp(3,57px) LineClamp(3,51px)--sm1024 M(0)"
+        ],
+        "features": "lxml"
+    },
+    "7": {
+        "url": "https://news.sky.com/",
+        "alias": "skynews",
+        "name": "",
+        "cls_name": [
+            "sdc-site-tile__headline-text",
+            "sdc-site-trending__link-text"
+        ],
+        "features": "lxml"
+    },
+    "8": {
+        "url": "https://www.forbes.com/",
+        "alias": "forbes",
+        "name": "",
+        "cls_name": [
+            "happening__title",
+            "headlink h1--dense card__color--capitalist-teal"
+        ],
+        "features": "lxml"
+    },
+    "9": {
+        "url": "https://www.cnbc.com/finance/",
+        "alias": "cnbcfinance",
+        "name": "",
+        "cls_name": [
+            "Card-title",
+            "TrendingNowItem-title"
+        ],
+        "features": "lxml"
     }
 }

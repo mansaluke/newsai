@@ -18,7 +18,10 @@ if __name__ == "__main__":
     for i in out.values():
         df_out = pd.DataFrame(i.to_pandas())
         df = df.append(df_out, ignore_index=True)
-        df.drop_duplicates(subset=None, keep='first', inplace=True)
+
+    duplicate_rows = df[['H0', 'H1', ]].duplicated()
+    log.warning(f'Removing {len(duplicate_rows)} duplicates')
+    df = df[~duplicate_rows]
 
     header_texts = ['H0', 'H1', 'H2']
     log.info(f'Removing sentences with a length < 3.')
@@ -31,7 +34,7 @@ if __name__ == "__main__":
             log.error(e)
 
     df = nlp.remove_null_rows(df, header_texts)
-    df = df[['H0', 'H1', 'H2', 'datetime', 'url', 'alias', 'published_date']]
+    df = df[header_texts + ['datetime', 'url', 'alias']]
 
     print(df.head())
     log.info('DataFrame length: {0}'.format(len(df)))

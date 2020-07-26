@@ -205,8 +205,9 @@ class News():
         for c in cls_name:
             element = soup.find_all(name, {"class": c})
             if len(element) == 0:
-                log.warning('No output returned for id: {0}, cls_name: {1}, url: {2}'.format(
-                    config_id, cls_name, url))
+                log.warning('No output returned for id:' +
+                            '{0}, cls_name: {1}, url: {2}'.format(
+                                config_id, cls_name, url))
             for i in element:
                 nd.add_story(config_id,
                              _return_sibling(i.previousSibling),

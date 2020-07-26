@@ -3,11 +3,17 @@ This library is made of two parts:
 - ``Analysis`` (WIP)
 
 #### News api download sources
-Current data:
+Real-time data sources incorporated:
 - BBC News
 - FOX News
 - ABC News
 - NYTimes
+- YahooFinance
+- Sky News
+- Forbes
+- CNBC Finance
+
+And it should be use your own data sources using a json config file.
 
 Historical news data from:
 - NYTimes
