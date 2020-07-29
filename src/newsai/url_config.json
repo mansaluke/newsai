@@ -78,7 +78,10 @@
         "name": "",
         "cls_name": [
             "happening__title",
-            "headlink h1--dense card__color--capitalist-teal"
+            "headlink h1--dense card__color--capitalist-teal",
+            "card__text",
+            "card--large__title",
+            "data-viz__title-container"
         ],
         "features": "lxml"
     },
