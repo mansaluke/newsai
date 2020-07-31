@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 import pandas as pd
 import numpy as np
+from newsai.utils.nlp import list_to_str
 
 
 class EmbedStrategy(ABC):
@@ -62,18 +63,10 @@ class ClusterEmbed():
         self._clusterstrategy = clusterstrategy
 
     def fit(self) -> pd.DataFrame:
-        corpus = self.df[self.header_texts].apply(self.list_to_str, axis=1)
+        corpus = self.df[self.header_texts].apply(list_to_str, axis=1)
         embedded_df = self._embedstrategy.fit(corpus)
         clustering = self._clusterstrategy.fit(embedded_df)
         return pd.DataFrame(
-            zip(corpus, clustering.labels_),
-            columns=['header', 'cluster'])
-
-    @staticmethod
-    def list_to_str(inp: list) -> str:
-        """
-        joins list to string
-        """
-        return ' ' .join(
-            ['' if e != e or type(e) is not str
-             else str(e) for e in inp])
+            clustering.labels_,
+            # zip(corpus, clustering.labels_),
+            columns=['Cluster_id'])

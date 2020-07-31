@@ -24,14 +24,7 @@ if __name__ == "__main__":
     df = df[~duplicate_rows]
 
     header_texts = ['H0', 'H1', 'H2']
-    log.info(f'Removing sentences with a length < 3.')
-    for col in header_texts:
-        try:
-            short_sentences = (df[col].apply(
-                lambda x: len(str(x).split(' '))) <= 3)
-            df.loc[short_sentences, col] = np.nan
-        except Exception as e:
-            log.error(e)
+    df = nlp.remove_short_sentences(df, header_texts, 3)
 
     df = nlp.remove_null_rows(df, header_texts)
     df = df[header_texts + ['datetime', 'url', 'alias']]

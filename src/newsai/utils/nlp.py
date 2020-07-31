@@ -2,6 +2,7 @@ from typing import Union, Optional, AnyStr, List
 import math
 from collections import Counter
 import pandas as pd
+import numpy as np
 import re
 import nltk
 from nltk import ngrams
@@ -12,6 +13,8 @@ from .nlogger import Log
 
 log = Log(__name__)
 
+
+# stop words/nltk - deprecated
 
 stop_words = set()
 lemmatizer = WordNetLemmatizer()
@@ -27,19 +30,6 @@ symbol_map = {r"[^A-Za-z0-9^,!?.\/'+]": " ",
               r"\s{2,}": " "}
 
 
-def split_on_uppercase(string_input: AnyStr) -> List:
-    matches = [
-        match.span()[0]+1 for match in re.finditer(
-            re.compile(r'([\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
-            string_input)]
-    matches.insert(0, 0)
-    matches.append(len(string_input))
-    out = []
-    for i in range(len(matches)-1):
-        out.append(string_input[matches[i]: matches[i+1]])
-    return out
-
-
 def activate_nltk() -> set:
     global stop_words
     nltk.download('wordnet')
@@ -47,10 +37,6 @@ def activate_nltk() -> set:
     nltk.download('punkt')
     stop_words = set(stopwords.words('english'))
     return stop_words
-
-
-def series_to_string(text_series: pd.Series):
-    return text_series.to_string(index=False).replace("\n", "")
 
 
 def get_non_stop_words(text_data: Union[pd.Series, str]):
@@ -90,6 +76,25 @@ def text_to_word_list(text, symb_map: dict = symbol_map):
              if w not in stop_words]
 
     return split_words(text)
+
+
+#
+
+def split_on_uppercase(string_input: AnyStr) -> List:
+    matches = [
+        match.span()[0]+1 for match in re.finditer(
+            re.compile(r'([\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
+            string_input)]
+    matches.insert(0, 0)
+    matches.append(len(string_input))
+    out = []
+    for i in range(len(matches)-1):
+        out.append(string_input[matches[i]: matches[i+1]])
+    return out
+
+
+def series_to_string(text_series: pd.Series):
+    return text_series.to_string(index=False).replace("\n", "")
 
 
 def is_null(val) -> bool:
@@ -149,3 +154,26 @@ def shift_nulls(df: pd.DataFrame, headers: list,
     else:
         print(headers)
         return remove_null_columns(df.T, headers)
+
+
+def list_to_str(inp: list) -> str:
+    """
+    joins list to string
+    """
+    return ' ' .join(
+        ['' if e != e or type(e) is not str
+         else str(e) for e in inp])
+
+
+def remove_short_sentences(df: pd.DataFrame,
+                           columns: list,
+                           sentence_length: int) -> pd.DataFrame:
+    log.info(f'Removing sentences with a length < {sentence_length}.')
+    for col in columns:
+        try:
+            short_sentences = (df[col].apply(
+                lambda x: len(str(x).split(' '))) <= sentence_length)
+            df.loc[short_sentences, col] = np.nan
+        except Exception as e:
+            log.error(e)
+    return df
