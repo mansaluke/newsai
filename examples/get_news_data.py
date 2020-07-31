@@ -19,7 +19,7 @@ if __name__ == "__main__":
         df_out = pd.DataFrame(i.to_pandas())
         df = df.append(df_out, ignore_index=True)
 
-    duplicate_rows = df[['H0', 'H1', ]].duplicated()
+    duplicate_rows = df[['H0', 'H1', 'alias']].duplicated()
     log.warning(f'Removing {len(duplicate_rows)} duplicates')
     df = df[~duplicate_rows]
 

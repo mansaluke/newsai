@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
 import typing
-from typing import Union, Optional
+from typing import Union, Optional, List
 import pathlib
 import re
 import pandas as pd
@@ -33,7 +33,7 @@ class StoryHolderDict(dict):
                 r = r + "".join("{!r}: {!r},".format(k, v))
         return r
 
-    def to_pandas(self, cols=None):
+    def to_pandas(self, cols=None) -> pd.DataFrame:
         df = pd.DataFrame(self['stories'])
         if cols is None:
             cols = ('datetime', 'url', 'alias')
@@ -57,7 +57,7 @@ class StoryDict(defaultdict):
 
 
 class Ndict(object):
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> Optional[List]:
         if kwargs:
             out = [StoryDict(**kwargs)]
         else:
@@ -146,5 +146,5 @@ class NewsDump(metaclass=Singleton):
             for i in to_append:
                 NewsDump.story_dump[config_id]['stories'].append(i)
 
-    def _get_story_dict(self, *args, **kwargs) -> list:
+    def _get_story_dict(self, *args, **kwargs) -> Optional[List]:
         return Ndict(*args, **kwargs)

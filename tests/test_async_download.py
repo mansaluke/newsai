@@ -10,6 +10,7 @@ async def test_fetch_stories(self, session: ClientSession,
 
 
 class TestNews(unittest.TestCase):
+
     def test_url_status(self) -> list:
         News.fetch_stories = test_fetch_stories
         n1 = News()
@@ -34,6 +35,4 @@ class TestNews(unittest.TestCase):
                 self.assertEqual(status, 200)
 
 
-if __name__ == '__main__':
-    # python -m unittest tests.test_async_download
-    unittest.main()
+# python -m unittest tests.test_async_download

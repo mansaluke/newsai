@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union, Optional, AnyStr, List
 import math
 from collections import Counter
 import pandas as pd
@@ -27,7 +27,7 @@ symbol_map = {r"[^A-Za-z0-9^,!?.\/'+]": " ",
               r"\s{2,}": " "}
 
 
-def split_on_uppercase(string_input):
+def split_on_uppercase(string_input: AnyStr) -> List:
     matches = [
         match.span()[0]+1 for match in re.finditer(
             re.compile(r'([\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
@@ -40,7 +40,7 @@ def split_on_uppercase(string_input):
     return out
 
 
-def activate_nltk():
+def activate_nltk() -> set:
     global stop_words
     nltk.download('wordnet')
     nltk.download('stopwords')
@@ -48,12 +48,6 @@ def activate_nltk():
     stop_words = set(stopwords.words('english'))
     return stop_words
 
-
-# try:
-#     activate_nltk()
-# except Exception as e:
-#     log.warning(
-#         f'Could not activate nltk. no stop words defined. Exception: {e}')
 
 def series_to_string(text_series: pd.Series):
     return text_series.to_string(index=False).replace("\n", "")
@@ -63,7 +57,8 @@ def get_non_stop_words(text_data: Union[pd.Series, str]):
     if type(text_data) == pd.Series:
         text_data = series_to_string(text_data)
     non_stop_words = [
-        lemmatizer.lemmatize(w) for w in re.findall(r'\b\S+\b', text_data.casefold())
+        lemmatizer.lemmatize(w)
+        for w in re.findall(r'\b\S+\b', text_data.casefold())
         if w not in stop_words]
     return non_stop_words
 
@@ -90,17 +85,19 @@ def text_to_word_list(text, symb_map: dict = symbol_map):
 
     def split_words(text_data):
         return \
-            [lemmatizer.lemmatize(w) for w in re.findall(r'\b\S+\b', text.lower())
+            [lemmatizer.lemmatize(w)
+             for w in re.findall(r'\b\S+\b', text.lower())
              if w not in stop_words]
 
     return split_words(text)
 
 
 def is_null(val) -> bool:
-    try:
-        return math.isnan(val)
-    except TypeError:
-        return False
+    # try:
+    #     return math.isnan(val)
+    # except TypeError:
+    #     return False
+    return val != val
 
 
 def remove_null_rows(df: pd.DataFrame, columns: list):
@@ -109,7 +106,7 @@ def remove_null_rows(df: pd.DataFrame, columns: list):
     """
     null_rows = (df[columns].isna()).all(axis=1)
 
-    log.info(f'Removing {df[null_rows].size} rows with nulls')
+    log.warning(f'Removing {df[null_rows].size} rows with nulls')
     return df[~null_rows]
 
 
@@ -136,7 +133,7 @@ def shift_nulls(df: pd.DataFrame, headers: list,
     and if _remove_null_columns is true we are left with:
         H0  H1
     1   a   nan
-    2   b   c  
+    2   b   c 
     """
     df = df.T
     for c in df.columns:

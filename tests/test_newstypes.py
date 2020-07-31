@@ -10,7 +10,8 @@ class test_NewsDump(unittest.TestCase):
         assert list(s.keys()) == ['H0', 'H1', 'H2']
 
     def test_Ndict(self):
-        n = Ndict('Story a', 'Story a details\n\n\nStory bStory c')
+        n = Ndict('Story a',
+                  'Story a details\n\n\nStory bStory c')
         assert isinstance(n, list)
         assert len(n) == 3
         assert isinstance(n[0], StoryDict)
@@ -29,3 +30,6 @@ class test_NewsDump(unittest.TestCase):
         n.add_story(2, 'a story', 'a good story')
         n.add_story(1, 'hi', 'another')
         assert len(n) == 2
+
+
+# python -m unittest tests.test_newstypes
