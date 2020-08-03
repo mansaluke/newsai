@@ -9,7 +9,7 @@ setup(
     description="News API",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    keywords="News asyncio NLP deep learning transformer pytorch",
+    keywords="News API webscraper asyncio NLP deep learning transformer pytorch",
     license="",
     url="https://github.com/mansaluke/newsai",
     package_dir={"": "src"},
@@ -23,7 +23,7 @@ setup(
         "nltk"
     ],
     # scripts=["async_download"],
-    python_requires=">=3.6.0",
+    python_requires=">=3.6.0",  # 3.7 needed for download functionality
     classifiers=[
         "Development Status :: Development/Unstable",
         'Programming Language :: Python',
