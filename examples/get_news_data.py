@@ -40,7 +40,7 @@ if __name__ == "__main__":
     print(df.head())
     log.info('DataFrame length: {0}'.format(len(df)))
 
-    file_name = 'sample_stories2.csv'
+    file_name = 'sample_stories.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
     if not os.path.exists(file_path):

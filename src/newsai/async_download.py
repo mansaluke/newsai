@@ -63,14 +63,10 @@ class News():
 
     @staticmethod
     def load_json(j_name: dict) -> dict:
-        if not run_from_ipython:
-            json_path = join(
-                dirname(realpath(__file__)), j_name
-            )
-        else:
-            json_path = join(
-                join(dirname(getcwd()), 'newsai'), j_name
-            )
+        # if not run_from_ipython:
+        json_path = join(
+            dirname(realpath(__file__)), j_name
+        )
         with open(json_path) as f:
             return load(f)
 
