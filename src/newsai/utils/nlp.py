@@ -1,6 +1,7 @@
-from typing import Union, Optional, AnyStr, List
+from typing import Union, Optional, AnyStr, List, Any
 import math
 from collections import Counter
+from itertools import combinations
 import pandas as pd
 import numpy as np
 import re
@@ -8,7 +9,6 @@ import nltk
 from nltk import ngrams
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-from re import sub
 from .nlogger import Log
 
 log = Log(__name__)
@@ -67,7 +67,7 @@ def text_to_word_list(text, symb_map: dict = symbol_map):
     text = str(text).lower()
 
     for k, v in symb_map.items():
-        text = sub(k, v, text)
+        text = re.sub(k, v, text)
 
     def split_words(text_data):
         return \
@@ -80,11 +80,37 @@ def text_to_word_list(text, symb_map: dict = symbol_map):
 
 #
 
-def split_on_uppercase(string_input: AnyStr) -> List:
+lowercase_words = ['iPhone', 'iPad']
+
+
+def find_lowercase_words(string_input: AnyStr,
+                         lowercase_word: AnyStr):
+    pos = string_input.find(lowercase_word)
+    if pos != -1:
+        return (pos, pos+len(lowercase_word))
+    else:
+        return None
+
+
+def split_on_uppercase(string_input: AnyStr,
+                       lowercase_words: List = lowercase_words
+                       ) -> List:
+    exclusion_positions = []
+    for e in lowercase_words:
+        exl = find_lowercase_words(string_input, e)
+        if exl:
+            exclusion_positions.append(
+                exl)
     matches = [
         match.span()[0]+1 for match in re.finditer(
-            re.compile(r'([\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
+            # re.compile(r'([\[a-z0-9][A-Z]|[\[a-zA-Z0-9][A-Z][a-z0-9])'),
+            re.compile(r'([\[a-z][A-Z]|[\[A-Z0-9][A-Z][a-z0-9])'),
             string_input)]
+    if exclusion_positions:
+        for m in matches.copy():
+            for e in exclusion_positions:
+                if m > e[0] and m < e[1]:
+                    matches.remove(m)
     matches.insert(0, 0)
     matches.append(len(string_input))
     out = []
@@ -152,7 +178,6 @@ def shift_nulls(df: pd.DataFrame, headers: list,
     if not _remove_null_columns:
         return df.T
     else:
-        print(headers)
         return remove_null_columns(df.T, headers)
 
 
@@ -167,8 +192,8 @@ def list_to_str(inp: list) -> str:
 
 def remove_short_sentences(df: pd.DataFrame,
                            columns: list,
-                           sentence_length: int) -> pd.DataFrame:
-    log.info(f'Removing sentences with a length < {sentence_length}.')
+                           sentence_length: int = 3) -> pd.DataFrame:
+    log.info(f'Removing sentences with a length <= {sentence_length}.')
     for col in columns:
         try:
             short_sentences = (df[col].apply(
@@ -176,4 +201,31 @@ def remove_short_sentences(df: pd.DataFrame,
             df.loc[short_sentences, col] = np.nan
         except Exception as e:
             log.error(e)
+    return df
+
+
+def truncate_long_sentences(df: pd.Series,
+                            sentence_length: int = 100) -> pd.Series:
+    log.info(f'Truncating sentences with a length > {sentence_length}.')
+
+    def _truncate_str(any_inp: Any):
+        try:
+            return ' '.join(any_inp.split(' ')[0:sentence_length])
+        except AttributeError:
+            return any_inp
+    try:
+        return df.apply(lambda x: _truncate_str(x))
+    except Exception as e:
+        log.error(e)
+
+
+def remove_duplicate_rows(df: pd.DataFrame, columns: List):
+    duplicate_rows = df[columns].duplicated()
+    log.warning(f'Removing {len(duplicate_rows)} duplicates')
+    return df[~duplicate_rows]
+
+
+def remove_duplicate_columns(df: pd.DataFrame,
+                             columnA: AnyStr, columnB: AnyStr):
+    df.loc[df[columnA] == df[columnB], columnB] = np.nan
     return df

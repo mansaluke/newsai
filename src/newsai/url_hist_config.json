@@ -7,7 +7,7 @@
             "attribute": {
                 "H1": "abstract",
                 "H2": "lead_paragraph",
-                "date": "pub_date"
+                "published_date": "pub_date"
             }
         }
     }

@@ -18,8 +18,7 @@
         "alias": "foxnews",
         "name": "",
         "cls_name": [
-            "content",
-            "related-item related-item-color-default"
+            "info-header"
         ],
         "features": "lxml"
     },

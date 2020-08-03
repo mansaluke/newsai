@@ -5,7 +5,7 @@ from typing import Union, Optional, List
 import pathlib
 import re
 import pandas as pd
-from newsai.utils.nlp import split_on_uppercase
+# from newsai.utils.nlp import split_on_uppercase
 
 __all__ = ["Url", "Path", "NewsDumpDict",
            "StoryHolderDict", "StoryDict", "Singleton", "NewsDump"]
@@ -69,7 +69,8 @@ class Ndict(object):
                 sp = re.split('\n+', i)
                 spl = []
                 for i in sp:
-                    spl.extend(split_on_uppercase(i))
+                    spl.append(i)
+                    # spl.extend(split_on_uppercase(i))
                 num_lines = len(spl)
                 split_args.append(spl)
                 if num_lines > max_len:
