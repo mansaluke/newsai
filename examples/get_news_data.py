@@ -1,6 +1,4 @@
-import sys
 import os
-import numpy as np
 import pandas as pd
 from newsai.async_download import News
 from newsai import Log, _DATA_PATH

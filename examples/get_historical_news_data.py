@@ -1,4 +1,3 @@
-import sys
 import os
 import pandas as pd
 from newsai.async_download import HistoricalNews

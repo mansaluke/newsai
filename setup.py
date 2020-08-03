@@ -19,6 +19,7 @@ setup(
     install_requires=[
         "aiohttp",
         "bs4",
+        "lxml",
         "nltk"
     ],
     # scripts=["async_download"],
