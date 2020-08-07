@@ -11,6 +11,9 @@ except ImportError:
     pass
 from .utils.nlogger import Log
 
+
+# DEPRECATED!!!
+
 log = Log(__name__)
 
 
@@ -19,7 +22,7 @@ storagetypes_dict = {"pickle": "", "json": "json", "csv": "csv",
                      "parquet": "parquet", "feather": "feather", "HDF5": "h5"}
 
 
-class Dstore(object):
+class Dstore_old(object):
     """
     loads/stores specified files to and from pickle, json, csv or parquet formats 
     e.g.1 Dstore('test.json').load_df()
