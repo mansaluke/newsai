@@ -11,15 +11,13 @@ class test_NewsDump(unittest.TestCase):
 
     def test_Ndict(self):
         n = Ndict('Story a',
-                  'Story a details\n\n\nStory bStory c')
+                  'Story a details\n\n\nStory b')
         assert isinstance(n, list)
-        assert len(n) == 3
+        assert len(n) == 2
         assert isinstance(n[0], StoryDict)
         assert len(n[0]) == 2
-        assert len(n[1]) == 1
         assert list(n[0].values()) == ['Story a', 'Story a details']
         assert list(n[1].values()) == ['Story b']
-        assert list(n[2].values()) == ['Story c']
 
     def test_add_story(self):
         n = NewsDump(1, 22, 3, 4, 5, 6)
