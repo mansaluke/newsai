@@ -5,7 +5,7 @@ from os import getcwd
 from os.path import dirname, join, realpath, basename
 from collections import defaultdict
 import time
-import typing
+from typing import List, Dict
 from json import load, loads
 import asyncio
 from aiohttp import ClientSession
@@ -28,13 +28,13 @@ class News():
                  **kwargs: str):
 
         self.j_name = j_name
-        self.find_futures_list = []
-        self.responses = {}
+        self.find_futures_list: List[asyncio.Future] = []
+        self.responses: Dict = {}
         self.j_dict = self.filter_by_val(
             self.load_json(j_name), **kwargs
         )
 
-    def __call__(self) -> list:
+    def __call__(self) -> List:
         if run_from_ipython:
             raise AttributeError(
                 "If called iPython run_async() function should be called " +
@@ -47,7 +47,7 @@ class News():
                 f'config: {basename(self.j_name)})')
 
     @staticmethod
-    def filter_by_val(j_dict: dict, **kwargs: str) -> dict:
+    def filter_by_val(j_dict: Dict, **kwargs: str) -> Dict:
         """
         we can pass in a list of arguments allowing
         us to filter the json by any values we like
@@ -62,7 +62,7 @@ class News():
         return j_dict
 
     @staticmethod
-    def load_json(j_name: dict) -> dict:
+    def load_json(j_name: Dict) -> Dict:
         # if not run_from_ipython:
         json_path = join(
             dirname(realpath(__file__)), j_name
@@ -82,7 +82,7 @@ class News():
                     url=url)
             )
 
-    def build_futures_search(self, config_id: int, url_info: dict):
+    def build_futures_search(self, config_id: int, url_info: Dict):
         try:
             self.find_futures_list.append(
                 asyncio.ensure_future(self.exec_find(
@@ -130,7 +130,7 @@ class News():
 
     async def exec_find(self, url: Url, alias: str,
                         name: str, cls_name: str,
-                        features: str, config_id: str):
+                        features: str, config_id: int):
         await self.responses[url]
         await self.find_stories(
             url,
@@ -143,7 +143,7 @@ class News():
         )
 
     async def json_selector(self, url: Url, alias: str,
-                            json_key: dict, config_id: int = 0):
+                            json_key: Dict, config_id: int = 0):
         await self.responses[url]
         json_out = loads(self.responses[url])
 
@@ -155,7 +155,6 @@ class News():
 
         nd = NewsDump(config_id, url, alias)
 
-        _stories = []
         for story in results:
             sd = StoryDict()
             for k, v in json_key['attribute'].items():
@@ -177,7 +176,7 @@ class News():
     async def find_stories(url: Url, alias: str,
                            response_text: str, name: str,
                            cls_name: str, features: str,
-                           config_id: str = 0
+                           config_id: int = 0
                            ):
         """
         for websites w/o apis
@@ -187,7 +186,6 @@ class News():
         log.debug(f"searching url: {url}")
         soup = BeautifulSoup(response_text.encode(
             'ascii', errors='ignore').decode('utf-8'), features=features)
-        _stories = []
 
         def _return_sibling(tag: Tag):
             try:
@@ -195,7 +193,7 @@ class News():
             except AttributeError:
                 return None
 
-        if type(cls_name) == str:
+        if isinstance(cls_name, str):
             cls_name = [cls_name]
 
         for c in cls_name:
@@ -224,7 +222,7 @@ class HistoricalNews(News):
         for element in self.j_dict.values():
             element["url"] = element["url"].format(year, month)
 
-    def __call__(self) -> list:
+    def __call__(self) -> List:
         return self.run_async()
 
     def __repr__(self):

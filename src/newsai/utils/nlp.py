@@ -1,4 +1,4 @@
-from typing import Union, Optional, AnyStr, List, Any
+from typing import Union, Optional, List, Any
 import math
 from collections import Counter
 from itertools import combinations
@@ -83,8 +83,8 @@ def text_to_word_list(text, symb_map: dict = symbol_map):
 lowercase_words = ['iPhone', 'iPad']
 
 
-def find_lowercase_words(string_input: AnyStr,
-                         lowercase_word: AnyStr):
+def find_lowercase_words(string_input: str,
+                         lowercase_word: str):
     pos = string_input.find(lowercase_word)
     if pos != -1:
         return (pos, pos+len(lowercase_word))
@@ -92,7 +92,7 @@ def find_lowercase_words(string_input: AnyStr,
         return None
 
 
-def split_on_uppercase(string_input: AnyStr,
+def split_on_uppercase(string_input: str,
                        lowercase_words: List = lowercase_words
                        ) -> List:
     exclusion_positions = []
@@ -226,6 +226,6 @@ def remove_duplicate_rows(df: pd.DataFrame, columns: List):
 
 
 def remove_duplicate_columns(df: pd.DataFrame,
-                             columnA: AnyStr, columnB: AnyStr):
+                             columnA: str, columnB: str):
     df.loc[df[columnA] == df[columnB], columnB] = np.nan
     return df
