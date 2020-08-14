@@ -14,7 +14,7 @@ from bs4.element import Tag
 import pandas as pd
 from .utils.ipython import run_from_ipython
 from .utils.nlogger import Log
-from .newstypes import NewsDump, Url, Path, NewsDumpDict, StoryDict
+from .newstypes import NewsDump, Url, Path, StoryHolderDict, StoryDict
 
 log = Log("asyncio")
 
@@ -105,7 +105,7 @@ class News():
                 )
             )
 
-    def run_async(self) -> NewsDumpDict:
+    def run_async(self) -> StoryHolderDict:
         self.add_futures(self.j_dict)
         loop = asyncio.get_event_loop()
         get_url_futures = asyncio.gather(

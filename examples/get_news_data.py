@@ -14,7 +14,7 @@ if __name__ == "__main__":
     df = pd.DataFrame()
 
     for i in out.values():
-        df_out = pd.DataFrame(i.to_pandas())
+        df_out = i.to_pandas()
         df = df.append(df_out, ignore_index=True)
 
     header_texts = ['H0', 'H1']
