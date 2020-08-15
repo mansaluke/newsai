@@ -18,13 +18,15 @@ if __name__ == "__main__":
         df = df.append(df_out, ignore_index=True)
 
     header_texts = ['H0', 'H1']
+
     df = nlp.remove_short_sentences(df, header_texts, 3)
     df = nlp.remove_null_rows(df, header_texts)
 
     log.info('Shifting columns')
     df = nlp.shift_nulls(df, header_texts, _remove_null_columns=False)
     # lets concatenate any extra info from column H2 into H1.
-    df['H1'] = nlp.truncate_long_sentences(df['H1'] + ' ' + df['H2'], 30)
+    df['H1'] = df[['H1',  'H2']].apply(lambda x: ' '.join(x.dropna()), axis=1)
+    df['H1'] = nlp.truncate_long_sentences(df['H1'], 30)
 
     df = nlp.remove_duplicate_rows(df, ['H0', 'H1', 'alias'])
     df = nlp.remove_duplicate_columns(df, header_texts[0], header_texts[1])
@@ -38,7 +40,7 @@ if __name__ == "__main__":
     print(df.head())
     log.info('DataFrame length: {0}'.format(len(df)))
 
-    file_name = 'sample_stories1.csv'
+    file_name = 'sample_stories.csv'
     file_path = os.path.join(_DATA_PATH, file_name)
 
     if not os.path.exists(file_path):
