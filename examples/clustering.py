@@ -1,7 +1,8 @@
 import os
 import pandas as pd
 from newsai import _DATA_PATH, Log
-from newsai.cluster import ClusterEmbed
+from newsai.embed import Embed
+from newsai.cluster import Cluster
 
 log = Log(os.path.basename(__file__))
 
@@ -11,13 +12,14 @@ if __name__ == "__main__":
     log.info(f'reading file: {file_name}')
     df = pd.read_csv(os.path.join(_DATA_PATH, file_name))
 
-    df = df[:20]
+    df = df[:10]
 
-    log.info('fitting')
-    cluster = ClusterEmbed(df)
-    df1 = cluster.fit()
+    log.info('embedding')
+    corpus = Embed(df, header_texts=['H0', 'H1']).fit()
+    print(corpus)
+
+    log.info('Clustering')
+    df1 = Cluster(corpus).fit()
     log.info(df1.head())
-
-    assert len(df) == len(df1)
 
     log.info(df.merge(df1, left_index=True, right_index=True))

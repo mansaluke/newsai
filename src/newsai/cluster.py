@@ -5,19 +5,6 @@ import numpy as np
 from newsai.utils.nlp import list_to_str
 
 
-class EmbedStrategy(ABC):
-    @abstractmethod
-    def fit(self, corpus: pd.DataFrame) -> pd.DataFrame:
-        pass
-
-
-class DefaultEmbedder(EmbedStrategy):
-    def fit(self, corpus: pd.DataFrame) -> pd.DataFrame:
-        from sentence_transformers import SentenceTransformer
-        self.embedder = SentenceTransformer('bert-base-nli-mean-tokens')
-        return pd.DataFrame(self.embedder.encode(corpus))
-
-
 class ClusterStrategy(ABC):
 
     @abstractmethod
@@ -33,26 +20,15 @@ class DefaultCluster(ClusterStrategy):
         return clusterer.fit(data)
 
 
-class ClusterEmbed():
+class Cluster():
 
     def __init__(self,
-                 df: pd.DataFrame,
-                 embedstrategy: EmbedStrategy = DefaultEmbedder(),
-                 clusterstrategy: ClusterStrategy = DefaultCluster(),
-                 header_texts: list = ['H0', 'H1', 'H2']) -> None:
+                 corpus: pd.DataFrame,
+                 clusterstrategy: ClusterStrategy = DefaultCluster()
+                 ) -> None:
 
-        self._embedstrategy: EmbedStrategy = embedstrategy
         self._clusterstrategy: ClusterStrategy = clusterstrategy
-        self.df: pd.DataFrame = df
-        self.header_texts: List = header_texts
-
-    @property
-    def embedstrategy(self) -> EmbedStrategy:
-        return self._embedstrategy
-
-    @embedstrategy.setter
-    def embedstrategy(self, embedstrategy: EmbedStrategy) -> None:
-        self._embedstrategy = embedstrategy
+        self.corpus: pd.DataFrame = corpus
 
     @property
     def clusterstrategy(self) -> ClusterStrategy:
@@ -63,9 +39,7 @@ class ClusterEmbed():
         self._clusterstrategy = clusterstrategy
 
     def fit(self) -> pd.DataFrame:
-        corpus = self.df[self.header_texts].apply(list_to_str, axis=1)
-        embedded_df = self._embedstrategy.fit(corpus)
-        clustering = self._clusterstrategy.fit(embedded_df)
+        clustering = self._clusterstrategy.fit(self.corpus)
         return pd.DataFrame(
             clustering.labels_,
             # zip(corpus, clustering.labels_),
