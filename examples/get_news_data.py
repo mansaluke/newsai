@@ -25,7 +25,7 @@ if __name__ == "__main__":
     log.info('Shifting columns')
     df = nlp.shift_nulls(df, header_texts, _remove_null_columns=False)
     # lets concatenate any extra info from column H2 into H1.
-    df['H1'] = df[['H1',  'H2']].apply(lambda x: ' '.join(x.dropna()), axis=1)
+    df['H1'] = df[['H1', 'H2']].apply(lambda x: ' '.join(x.dropna()), axis=1)
     df['H1'] = nlp.truncate_long_sentences(df['H1'], 30)
 
     df = nlp.remove_duplicate_rows(df, ['H0', 'H1', 'alias'])

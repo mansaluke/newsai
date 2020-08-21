@@ -16,7 +16,7 @@ class DefaultCluster(ClusterStrategy):
     def fit(self, data: pd.DataFrame):
         from sklearn.cluster import AgglomerativeClustering
         clusterer = AgglomerativeClustering(
-            n_clusters=None, distance_threshold=10)
+            n_clusters=None, distance_threshold=5)
         return clusterer.fit(data)
 
 
