@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
 import pandas as pd
-import numpy as np
 from newsai.utils.nlp import list_to_str
 
 

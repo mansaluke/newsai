@@ -1,10 +1,14 @@
+"""
+underlying storage classes used by download
+"""
+
+
 from collections import defaultdict
 from datetime import datetime
-from typing import Union, Optional, List, Dict, Iterable
+from typing import Union, Optional, List, Iterable
 import pathlib
 import re
 import pandas as pd
-# from newsai.utils.nlp import split_on_uppercase
 
 __all__ = ["Url", "Path", "NewsDumpDict",
            "StoryHolderDict", "StoryDict", "Singleton", "NewsDump"]
@@ -14,6 +18,9 @@ Path = Union[str, pathlib.Path]
 
 
 class NewsDumpDict(dict):
+    """
+    preformatted dict
+    """
     def __repr__(self):
         return "{" + "\n".join("{!r}: {!r},".format(k, v)
                                for k, v in self.items()) + "}"
@@ -24,29 +31,29 @@ class StoryHolderDict(dict):
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
-        r = ""
-        for k, v in self.items():
-            if k == "stories":
-                r = r + "".join("{!r}:\n{!r}".format(k, v))
+        rep_str = ""
+        for key, value in self.items():
+            if key == "stories":
+                rep_str = rep_str + "".join("{!r}:\n{!r}".format(key, value))
             else:
-                r = r + "".join("{!r}: {!r},".format(k, v))
-        return r
+                rep_str = rep_str + "".join("{!r}: {!r},".format(key, value))
+        return rep_str
 
     def to_pandas(self, cols: Iterable[str] = None) -> pd.DataFrame:
-        df = pd.DataFrame(self['stories'])
+        dataframe = pd.DataFrame(self['stories'])
         if cols is None:
             cols = ('datetime', 'url', 'alias')
-        for k, v in self.items():
-            if k in cols:
-                df[k] = v
-        return df
+        for key, val in self.items():
+            if key in cols:
+                dataframe[key] = val
+        return dataframe
 
 
 class StoryDict(defaultdict):
     def __init__(self, *args, **kwargs):
         super().__init__(lambda: None, **kwargs)
 
-        new_elements = [a for a in args if a is not None]
+        new_elements = [arg for arg in args if arg is not None]
 
         for i in range(len(new_elements)):
             self.__setitem__('H' + str(i), new_elements[i])
@@ -65,10 +72,10 @@ class Ndict(object):
             split_args = []
             max_len = 1
             for i in in_story_vals:
-                sp = re.split('\n+', i)
+                split_str = re.split('\n+', i)
                 spl = []
-                for i in sp:
-                    spl.append(i)
+                for j in split_str:
+                    spl.append(j)
                     # spl.extend(split_on_uppercase(i))
                 num_lines = len(spl)
                 split_args.append(spl)
@@ -89,8 +96,9 @@ class Ndict(object):
                     out.append(StoryDict(*i))
         if any(out):
             return out
-        else:
-            return None
+
+    def __getitem__(self, index):
+        return self[index]
 
 
 class Singleton(type):
@@ -113,7 +121,7 @@ class NewsDump(metaclass=Singleton):
               'cls_name', 'features', 'stories'])
     stories is a list of dictionaries each like the following
     {'H0': 'LiveLiveUS passes two million cases as states report rise',
-        'H1': 'Daily infections are still rising in some states as governments ease restrictions.', 'H2': None}
+        'H1': 'Daily infections are still...', 'H2': None}
     """
 
     story_dump = NewsDumpDict()
@@ -135,7 +143,7 @@ class NewsDump(metaclass=Singleton):
             stories=[])
 
     def __repr__(self):
-        return (f'{self.__class__.__name__}')
+        return f'{self.__class__.__name__}'
 
     def __len__(self):
         return len(NewsDump.story_dump)

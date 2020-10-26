@@ -1,5 +1,4 @@
 import unittest
-import asyncio
 from newsai.newstypes import NewsDump, StoryDict, Ndict
 
 

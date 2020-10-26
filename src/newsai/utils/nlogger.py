@@ -1,5 +1,3 @@
-import os
-import io
 import logging
 from logging import (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 
