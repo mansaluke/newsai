@@ -1,5 +1,5 @@
 import unittest
-from newsai.newstypes import NewsDump, StoryDict, Ndict
+from newsai.newstypes import NewsDump, StoryDict, ndict
 
 
 class test_NewsDump(unittest.TestCase):
@@ -8,8 +8,8 @@ class test_NewsDump(unittest.TestCase):
         s = StoryDict('a', 'b', 'c')
         assert list(s.keys()) == ['H0', 'H1', 'H2']
 
-    def test_Ndict(self):
-        n = Ndict('Story a',
+    def test_ndict(self):
+        n = ndict('Story a',
                   'Story a details\n\n\nStory b')
         assert isinstance(n, list)
         assert len(n) == 2
