@@ -3,3 +3,4 @@ env/
 __pycache__/
 *dev*
 *log*
+.pypirc
