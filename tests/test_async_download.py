@@ -13,24 +13,24 @@ class TestNews(unittest.TestCase):
 
     def test_url_status(self) -> list:
         News.fetch_stories = test_fetch_stories
-        n1 = News()
+        current_news = News()
 
         HistoricalNews.fetch_stories = test_fetch_stories
-        n2 = HistoricalNews(year=2020, month=1)
+        hist_news = HistoricalNews(year=2020, month=1)
 
-        for n in (n1, n2):
-            for v in n.j_dict.values():
-                n.build_futures_get(v['url'])
+        for news in (current_news, hist_news):
+            for source in news.j_dict.values():
+                news.build_futures_get(source['url'])
 
             loop = asyncio.get_event_loop()
             get_url_futures = asyncio.gather(
-                *[f for f in n.responses.values()])
+                *[ftr for ftr in news.responses.values()])
 
             loop.run_until_complete(
                 get_url_futures
             )
 
-            for url, status in n.responses.items():
+            for url, status in news.responses.items():
                 print(f'{url}: {status}')
                 self.assertEqual(status, 200)
 

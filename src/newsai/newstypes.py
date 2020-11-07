@@ -29,6 +29,9 @@ class NewsDumpDict(dict):
 
 
 class StoryHolderDict(dict):
+    """
+    pre-formatted dictionary with to_pandas functionality
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

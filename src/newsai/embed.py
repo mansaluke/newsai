@@ -20,12 +20,12 @@ class DefaultEmbedder(EmbedStrategy):
 class Embed():
 
     def __init__(self,
-                 df: pd.DataFrame,
-                 embedstrategy: EmbedStrategy = DefaultEmbedder(),
-                 header_texts: list = ['H0', 'H1', 'H2']) -> None:
+                 frame: pd.DataFrame,
+                 header_texts: list,
+                 embedstrategy: EmbedStrategy = DefaultEmbedder()) -> None:
 
         self._embedstrategy: EmbedStrategy = embedstrategy
-        self.df: pd.DataFrame = df
+        self.frame: pd.DataFrame = frame
         self.header_texts: List = header_texts
 
     @property
@@ -37,5 +37,5 @@ class Embed():
         self._embedstrategy = embedstrategy
 
     def fit(self) -> pd.DataFrame:
-        self.df = self.df[self.header_texts].apply(list_to_str, axis=1)
-        return self._embedstrategy.fit(self.df)
+        self.frame = self.frame[self.header_texts].apply(list_to_str, axis=1)
+        return self._embedstrategy.fit(self.frame)

@@ -1,17 +1,18 @@
 from abc import ABC, abstractmethod
-from typing import List
 import pandas as pd
 
 
 class ClusterStrategy(ABC):
 
     @abstractmethod
-    def fit(self, data: pd.DataFrame):
+    @staticmethod
+    def fit(data: pd.DataFrame):
         pass
 
 
 class DefaultCluster(ClusterStrategy):
-    def fit(self, data: pd.DataFrame):
+    @staticmethod
+    def fit(data: pd.DataFrame):
         from sklearn.cluster import AgglomerativeClustering
         clusterer = AgglomerativeClustering(
             n_clusters=None, distance_threshold=5)
