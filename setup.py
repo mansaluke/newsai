@@ -3,7 +3,6 @@ from setuptools import setup, find_packages
 
 setup(
     name="newsai",
-    packages = ['newsai'],
     version="0.9",
     author="Luke Mcleary",
     author_email="lukemcleary95@gmail.com",
