@@ -3,8 +3,10 @@ import pandas as pd
 from newsai.async_download import News
 from newsai import Log, _DATA_PATH
 from newsai.utils import nlp
+from newsai.utils.dfconvert import create_path
 
 log = Log(os.path.basename(__file__))
+_DATA_PATH = create_path(_DATA_PATH)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,9 @@ log = Log(__name__)
 
 
 def mkdir_p(path):
+    """
+    created path if it does not exist
+    """
     import errno
     try:
         path = path
@@ -20,6 +23,9 @@ def mkdir_p(path):
 
 
 def create_path(path):
+    """
+    creates path if it does not exist with user input
+    """
     if not exists(path):
         a = True
         while a is True:
