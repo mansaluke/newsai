@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="newsai",
+    packages = ['newsai'],
     version="0.9",
     author="Luke Mcleary",
     author_email="lukemcleary95@gmail.com",
@@ -12,6 +13,7 @@ setup(
     keywords="News API webscraper asyncio NLP deep learning transformer pytorch",
     license="",
     url="https://github.com/mansaluke/newsai",
+    download_url="https://github.com/mansaluke/newsai/archive/0.9.tar.gz",
     package_dir={"": "src"},
     packages=find_packages("src"),
     include_package_data=True,
